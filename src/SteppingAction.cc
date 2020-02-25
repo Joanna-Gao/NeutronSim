@@ -72,6 +72,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
+  G4cout << "GetTotalEnergyDeposit: " << edepStep << G4endl;
   fEventAction->AddEdep(edepStep); 
 
   // attempt to extract particle name 
@@ -85,9 +86,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   G4String particleName = particle->GetParticleName();
 
-  G4cout << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
+  G4cout << counter << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
       << " MeV" << G4endl;
 
+  counter++;
+      
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
