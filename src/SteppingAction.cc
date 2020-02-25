@@ -32,9 +32,11 @@
 #include "DetectorConstruction.hh"
 
 #include "G4Step.hh"
+#include "G4Track.hh"
 #include "G4Event.hh"
 #include "G4RunManager.hh"
 #include "G4LogicalVolume.hh"
+#include "G4DynamicParticle.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -70,7 +72,22 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
-  fEventAction->AddEdep(edepStep);  
+  fEventAction->AddEdep(edepStep); 
+
+  // attempt to extract particle name 
+  G4Track *track = step->GetTrack();
+  
+  const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
+
+  G4ParticleDefinition *particle = dynParticle->GetDefinition();
+
+  G4double kinEnergy = dynParticle->GetKineticEnergy();
+
+  G4String particleName = particle->GetParticleName();
+
+  G4cout << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
+      << " MeV" << G4endl;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

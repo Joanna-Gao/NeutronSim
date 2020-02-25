@@ -34,6 +34,7 @@
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
+#include "G4DynamicParticle.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -72,7 +73,6 @@ void EventAction::EndOfEventAction(const G4Event*)
   analysisManager->FillNtupleDColumn(0, 0, fEdep);
   analysisManager->AddNtupleRow();
 
-  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
