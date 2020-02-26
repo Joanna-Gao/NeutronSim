@@ -33,7 +33,7 @@ void AnalysisManager::Initialise()
   G4String fileName = "ProtonAnalysis.root";
 
   // Create directories  
-  manager->SetNtupleDirectoryName("ProtonAnalysis");
+  //manager->SetNtupleDirectoryName("ProtonAnalysis");
   
 
   G4bool fileOpen = manager->OpenFile(fileName);
@@ -47,7 +47,7 @@ void AnalysisManager::Initialise()
   manager->SetFirstNtupleId(1);
 
   //Create Total Energy Deposition Ntuple
-  manager -> CreateNtuple("101", "TotalEdep");
+  manager -> CreateNtuple("TotalEdep", "TotalEdep");
   fNtColId[0] = manager -> CreateNtupleDColumn("TotalEdep");
   manager -> FinishNtuple();
 
@@ -73,7 +73,6 @@ void AnalysisManager::Initialise()
 
   factoryOn = true;    
 }
-
 
 void AnalysisManager::StoreTotalEdep(G4double edep)
 {

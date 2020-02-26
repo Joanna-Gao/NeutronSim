@@ -59,7 +59,7 @@ void ActionInitialization::BuildForMaster() const
 
 void ActionInitialization::Build() const
 {
-  SetUserAction(new PrimaryGeneratorAction(analysisManager));
+  SetUserAction(new PrimaryGeneratorAction());
 
   RunAction* runAction = new RunAction(analysisManager);
   SetUserAction(runAction);

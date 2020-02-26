@@ -30,6 +30,7 @@
 #ifndef SteppingAction_h
 #define SteppingAction_h 1
 
+#include "AnalysisManager.hh"
 #include "G4UserSteppingAction.hh"
 #include "globals.hh"
 

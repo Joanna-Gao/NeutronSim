@@ -68,7 +68,7 @@ RunAction::RunAction(AnalysisManager* analysis)
   // The choice of analysis technology is done via selectin of a namespace
   // in AnalysisManager.hh
   analysisManager = analysis;
-  G4cout << "Using " << analysisManager->GetType() << G4endl;
+  //G4cout << "Using " << analysisManager->GetType() << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -91,7 +91,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4String particleName = particle->GetParticleName();
 
   //G4cout << counter << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
-      << " MeV" << G4endl;
+  //    << " MeV" << G4endl;
 
   counter++;
       

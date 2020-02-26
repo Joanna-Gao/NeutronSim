@@ -33,6 +33,7 @@
 #include "G4UserRunAction.hh"
 #include "G4Accumulable.hh"
 #include "globals.hh"
+#include "AnalysisManager.hh"
 
 class G4Run;
 
