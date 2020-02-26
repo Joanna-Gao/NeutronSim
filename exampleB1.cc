@@ -29,6 +29,7 @@
 
 #include "DetectorConstruction.hh"
 #include "ActionInitialization.hh"
+#include "AnalysisManager.hh"
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -66,6 +67,8 @@ int main(int argc,char** argv)
   G4RunManager* runManager = new G4RunManager;
 #endif
 
+  AnalysisManager* analysisManager = new AnalysisManager();
+  
   // Set mandatory initialization classes
   //
   // Detector construction
@@ -77,7 +80,7 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(physicsList);
     
   // User action initialization
-  runManager->SetUserInitialization(new ActionInitialization());
+  runManager->SetUserInitialization(new ActionInitialization(analysisManager));
   
   // Initialize visualization
   //
@@ -111,6 +114,7 @@ int main(int argc,char** argv)
   
   delete visManager;
   delete runManager;
+  delete analysisManager;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

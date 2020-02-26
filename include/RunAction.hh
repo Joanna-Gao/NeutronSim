@@ -45,7 +45,7 @@ class G4Run;
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction();
+    RunAction(AnalysisManager* analysis);
     virtual ~RunAction();
 
     // virtual G4Run* GenerateRun();
@@ -57,6 +57,7 @@ class RunAction : public G4UserRunAction
   private:
     G4Accumulable<G4double> fEdep;
     G4Accumulable<G4double> fEdep2;
+    AnalysisManager*        analysisManager;
 };
 
 #endif

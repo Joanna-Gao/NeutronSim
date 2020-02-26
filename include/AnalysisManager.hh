@@ -1,47 +1,88 @@
 #ifndef ANALYSISMANAGER_HH
-#define ANALYSISMANAGER_HH
+#define ANALYSISMANAGER_HH 
 
 #include "globals.hh"
-#include <fstream>
+#include "g4root.hh"
+//#include "g4csv.hh"
+//#include "g4xml.hh"
 
-class AnalysisManager {
+// Define the total number of columns in the ntuple
+const G4int MaxNtCol = 4;
 
- public:
-   // The analysis class is designed to be a singleton (i.e. only one instance
-   // can exist). A member function called Instance is defined, which allows 
-   // the user to get a pointer to the existing instance or to create it if 
-   // it does not yet exist
-   // 
-   static AnalysisManager* Instance();
+class AnalysisManager
+{ 
 
-   // The analysis class instance can be deleted by calling the Destroy
-   // method (NOTE: The class destructor is protected, and can thus not be
-   // called directly):
-   static void Destroy(); 
+public:
+   AnalysisManager();
+  ~AnalysisManager();
+  
+  void Initialise(); // Creating the ROOT file
 
-//    // Member function used to score the total energy deposit
-//   void ScoreTot(G4double eTot);
+  void StoreTotalEdep(G4double edep);
 
-   // Member function used to dump hits
-  void Score(G4double eDep);
+  void StoreElectronEdep(G4double edep);
+  
+  void StorePositronEdep(G4double edep); 
 
- protected:
-   // Constructor (protected):
-   AnalysisManager();    
+  void StorePhotonEdep(G4double edep);   
 
-   // Destructor (protected): 
-   virtual ~AnalysisManager();
-
-   // Prevent copying
-   AnalysisManager(const AnalysisManager& only);
-   const AnalysisManager& operator=(const AnalysisManager& only);
+  void StorePionEdep(G4double edep);     
+  
+  void Finish();
+  // Close the ROOT file with all the results stored in nutples 
 
 private:
-  // The static instance of the AnalysisManager class:
-  static AnalysisManager* instance;
-  std::ofstream outFile;
-  std::ofstream outFileT;
+  G4bool    factoryOn; 
+  G4int     fNtColId[MaxNtCol];
+
 };
 
+#endif
 
-#endif // ANALYSISMANAGER_HH
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

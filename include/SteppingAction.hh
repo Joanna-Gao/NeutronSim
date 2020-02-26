@@ -43,7 +43,8 @@ class G4LogicalVolume;
 class SteppingAction : public G4UserSteppingAction
 {
   public:
-    SteppingAction(EventAction* eventAction);
+    SteppingAction(EventAction* eventAction,
+                   AnalysisManager* analysisMan);
     virtual ~SteppingAction();
 
     // method from the base class
@@ -51,6 +52,7 @@ class SteppingAction : public G4UserSteppingAction
 
   private:
     EventAction*  fEventAction;
+    AnalysisManager* analysisManager;
     G4LogicalVolume* fScoringVolume;
     G4int         counter = 0;
 };

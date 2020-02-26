@@ -44,14 +44,17 @@ class EventAction : public G4UserEventAction
     EventAction(RunAction* runAction);
     virtual ~EventAction();
 
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
+    virtual void BeginOfEventAction(const G4Event* event,
+                                    AnalysisManager* analysisMan);
+    virtual void EndOfEventAction(const G4Event* event,
+                                  AnalysisManager* analysisMan);
 
     void AddEdep(G4double edep) { fEdep += edep; }
 
   private:
-    RunAction* fRunAction;
-    G4double     fEdep;
+    RunAction*            fRunAction;
+    G4double                   fEdep;
+    AnalysisManager* analysisManager;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
