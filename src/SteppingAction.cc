@@ -30,6 +30,7 @@
 #include "SteppingAction.hh"
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
+#include "AnalysisManager.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -40,11 +41,14 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SteppingAction::SteppingAction(EventAction* eventAction)
+SteppingAction::SteppingAction(EventAction* eventAction,
+                               AnalysisManager* analysisMan)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
   fScoringVolume(0)
-{}
+{
+  analysisManager = analysisMan;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -72,7 +76,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
-  G4cout << "GetTotalEnergyDeposit: " << edepStep << G4endl;
+  //G4cout << "GetTotalEnergyDeposit: " << edepStep << G4endl;
   fEventAction->AddEdep(edepStep); 
 
   // attempt to extract particle name 
@@ -86,7 +90,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   G4String particleName = particle->GetParticleName();
 
-  G4cout << counter << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
+  //G4cout << counter << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
       << " MeV" << G4endl;
 
   counter++;

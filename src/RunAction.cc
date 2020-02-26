@@ -30,7 +30,7 @@
 #include "RunAction.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "DetectorConstruction.hh"
-#include "Analysis.hh"
+#include "AnalysisManager.hh"
 
 #include "G4RunManager.hh"
 #include "G4Run.hh"
@@ -42,7 +42,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction()
+RunAction::RunAction(AnalysisManager* analysis)
 : G4UserRunAction(),
   fEdep(0.),
   fEdep2(0.)
@@ -66,34 +66,15 @@ RunAction::RunAction()
 
   // Create analysis manager
   // The choice of analysis technology is done via selectin of a namespace
-  // in B4Analysis.hh
-  auto analysisManager = G4AnalysisManager::Instance();
+  // in AnalysisManager.hh
+  analysisManager = analysis;
   G4cout << "Using " << analysisManager->GetType() << G4endl;
-
-  // Create directories
-  //analysisManager->SetHistoDirectoryName("histograms");
-  //analysisManager->SetNtupleDirectoryName("ntuple");
-  analysisManager->SetVerboseLevel(1);
-  analysisManager->SetFirstHistoId(1);
-  //analysisManager->SetFirstNtupleId(1);
-  analysisManager->SetNtupleMerging(true);
-    // Note: merging ntuples is available only with Root output
-
-  // Creating histograms
-  analysisManager->CreateH1("Edep","Edep in water", 100, 0., 1*GeV);
-  
-  // Creating ntuple
-  analysisManager->CreateNtuple("Ntuple", "Edep");
-  analysisManager->CreateNtupleDColumn("Edep");
-  analysisManager->FinishNtuple();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::~RunAction()
-{
-  delete G4AnalysisManager::Instance();
-}
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -103,12 +84,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
   // Get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
-  // Open an output file
-  //
-  G4String fileName = "NeutronSim";
-  analysisManager->OpenFile(fileName);
+  analysisManager->Initialise();
 
   // reset accumulables to their initial values
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
@@ -184,15 +160,7 @@ void RunAction::EndOfRunAction(const G4Run* run)
 
   // save histograms & ntuple
   //
-  auto analysisManager = G4AnalysisManager::Instance();
-  //
-  //analysisManager->FillH1(1, edep);
-
-  //analysisManager->FillNtupleDColumn(0, 0, edep);
-  //analysisManager->AddNtupleRow(0);             
-
-  analysisManager->Write();
-  analysisManager->CloseFile();
+  analysisManager->Finish();
 
 }
 

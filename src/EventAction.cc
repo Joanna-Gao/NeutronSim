@@ -29,8 +29,7 @@
 
 #include "EventAction.hh"
 #include "RunAction.hh"
-#include "Analysis.hh"
-
+#include "AnalysisManager.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -38,11 +37,13 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction* runAction)
+EventAction::EventAction(RunAction* runAction, AnalysisManager* analysisMan)
 : G4UserEventAction(),
   fRunAction(runAction),
   fEdep(0.)
-{} 
+{
+  analysisManager = analysisMan;
+} 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -51,28 +52,25 @@ EventAction::~EventAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::BeginOfEventAction(const G4Event*)
+void EventAction::BeginOfEventAction(const G4Event* event,
+                                     AnalysisManager* analysisMan)
 {    
   fEdep = 0.;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::EndOfEventAction(const G4Event*)
+void EventAction::EndOfEventAction(const G4Event* event,
+                                   AnalysisManager* analysisMan)
 {   
   // accumulate statistics in run action
   fRunAction->AddEdep(fEdep); 
 
-  // get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
-
   // fill histograms
-  analysisManager->FillH1(1, fEdep);
+  //analysisManager->FillH1(1, fEdep);
 
   // fill ntuple
-  analysisManager->FillNtupleDColumn(0, 0, fEdep);
-  analysisManager->AddNtupleRow();
-
+  analysisManager->StoreTotalEdep(fEdep);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

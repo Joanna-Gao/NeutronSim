@@ -2,7 +2,7 @@
 #include "AnalysisManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4AnalysisManager.hh"
+//#include "G4AnalysisManager.hh"
 
 
 AnalysisManager::AnalysisManager() 
@@ -33,7 +33,7 @@ void AnalysisManager::Initialise()
   G4String fileName = "ProtonAnalysis.root";
 
   // Create directories  
-  manager->SetNtupleDirectoryName("ProtonAnalysis_ntuple");
+  manager->SetNtupleDirectoryName("ProtonAnalysis");
   
 
   G4bool fileOpen = manager->OpenFile(fileName);
@@ -46,53 +46,71 @@ void AnalysisManager::Initialise()
 
   manager->SetFirstNtupleId(1);
 
-  //Create Primary Energy Ntuple
-  manager -> CreateNtuple("101", "Primary Energy");
-  fNtColId[0] = manager -> CreateNtupleDColumn("Ek");
+  //Create Total Energy Deposition Ntuple
+  manager -> CreateNtuple("101", "TotalEdep");
+  fNtColId[0] = manager -> CreateNtupleDColumn("TotalEdep");
   manager -> FinishNtuple();
 
-  //Create Energy Deposition within SV Ntuple
-  manager -> CreateNtuple("102", "Edep");
-  fNtColId[1] = manager -> CreateNtupleDColumn("edep");
+  //Create Energy Deposition of electrons
+  manager -> CreateNtuple("102", "eEdep");
+  fNtColId[1] = manager -> CreateNtupleDColumn("eEdep");
   manager -> FinishNtuple();
 
-  //creating a ntuple, containing the information about secondary particles
-  manager -> CreateNtuple("103", "secondary");
-  fNtColId[2] = manager -> CreateNtupleDColumn("AA");
-  fNtColId[3] = manager -> CreateNtupleDColumn("ZZ");
-  fNtColId[4] = manager -> CreateNtupleDColumn("KE");
-  manager -> FinishNtuple();
+  //Create Energy Deposition of positrons                
+  manager -> CreateNtuple("103", "e+Edep");               
+  fNtColId[2] = manager -> CreateNtupleDColumn("epEdep"); 
+  manager -> FinishNtuple();                             
 
+  //Create Energy Deposition of photons                 
+  manager -> CreateNtuple("104", "gammaEdep");                
+  fNtColId[3] = manager -> CreateNtupleDColumn("gammaEdep");  
+  manager -> FinishNtuple();                               
   
+  //Create Energy Deposition of pions                        
+  manager -> CreateNtuple("105", "pionEdep");                 
+  fNtColId[4] = manager -> CreateNtupleDColumn("pionEdep");   
+  manager -> FinishNtuple();                                   
+
   factoryOn = true;    
 }
 
 
-void AnalysisManager::SetPrimaryEnergy(G4double energy)
+void AnalysisManager::StoreTotalEdep(G4double edep)
 {
   G4AnalysisManager* manager = G4AnalysisManager::Instance();
-  manager -> FillNtupleDColumn(1, fNtColId[0], energy);
+  manager -> FillNtupleDColumn(1, fNtColId[0], edep);
   manager -> AddNtupleRow(1); 
 }
 
-void AnalysisManager::StoreEnergyDeposition(G4double edep)
+void AnalysisManager::StoreElectronEdep(G4double edep)
 {
   G4AnalysisManager* manager = G4AnalysisManager::Instance();
   manager -> FillNtupleDColumn(2, fNtColId[1], edep);
   manager -> AddNtupleRow(2); 
 }
 
-void AnalysisManager::FillSecondaries(G4int AA, G4double charge, G4double energy)
-{
+void AnalysisManager::StorePositronEdep(G4double edep)        
+{                                                             
+  G4AnalysisManager* manager = G4AnalysisManager::Instance(); 
+  manager -> FillNtupleDColumn(3, fNtColId[2], edep);         
+  manager -> AddNtupleRow(3);                                 
+}                                                             
 
-  G4AnalysisManager* manager = G4AnalysisManager::Instance();
-  manager -> FillNtupleDColumn(3, fNtColId[2], AA);
-  manager -> FillNtupleDColumn(3, fNtColId[3], charge);
-  manager -> FillNtupleDColumn(3, fNtColId[4], energy);
-  manager -> AddNtupleRow(3);  
-}
+void AnalysisManager::StorePhotonEdep(G4double edep)        
+{                                                             
+  G4AnalysisManager* manager = G4AnalysisManager::Instance(); 
+  manager -> FillNtupleDColumn(4, fNtColId[3], edep);         
+  manager -> AddNtupleRow(4);                                 
+}                                                             
+
+void AnalysisManager::StorePionEdep(G4double edep)           
+{                                                              
+  G4AnalysisManager* manager = G4AnalysisManager::Instance();  
+  manager -> FillNtupleDColumn(5, fNtColId[4], edep);          
+  manager -> AddNtupleRow(5);                                  
+}                                                              
  
-void AnalysisManager::finish() 
+void AnalysisManager::Finish() 
 {   
  if (factoryOn) 
    {

@@ -28,6 +28,7 @@
 /// \brief Implementation of the ActionInitialization class
 
 #include "ActionInitialization.hh"
+#include "AnalysisManager.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 #include "EventAction.hh"
@@ -35,9 +36,11 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::ActionInitialization()
+ActionInitialization::ActionInitialization(AnalysisManager* analysisMan)
  : G4VUserActionInitialization()
-{}
+{
+  analysisManager = analysisMan;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -48,7 +51,7 @@ ActionInitialization::~ActionInitialization()
 
 void ActionInitialization::BuildForMaster() const
 {
-  RunAction* runAction = new RunAction;
+  RunAction* runAction = new RunAction(analysisManager);
   SetUserAction(runAction);
 }
 
@@ -56,15 +59,15 @@ void ActionInitialization::BuildForMaster() const
 
 void ActionInitialization::Build() const
 {
-  SetUserAction(new PrimaryGeneratorAction);
+  SetUserAction(new PrimaryGeneratorAction(analysisManager));
 
-  RunAction* runAction = new RunAction;
+  RunAction* runAction = new RunAction(analysisManager);
   SetUserAction(runAction);
   
-  EventAction* eventAction = new EventAction(runAction);
+  EventAction* eventAction = new EventAction(runAction, analysisManager);
   SetUserAction(eventAction);
   
-  SetUserAction(new SteppingAction(eventAction));
+  SetUserAction(new SteppingAction(eventAction, analysisManager));
 }  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
