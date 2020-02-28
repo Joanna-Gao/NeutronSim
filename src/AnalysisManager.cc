@@ -72,9 +72,9 @@ void AnalysisManager::Initialise()
   fNtColId[3] = manager -> CreateNtupleDColumn("gammaEdep");  
   manager -> FinishNtuple();                               
   
-  //Create Energy Deposition of pions                        
-  manager -> CreateNtuple("105", "pionEdep");                 
-  fNtColId[4] = manager -> CreateNtupleDColumn("pionEdep");   
+  //Create Energy Deposition of pi+                        
+  manager -> CreateNtuple("piPlusEdep", "pi+Edep");                 
+  fNtColId[4] = manager -> CreateNtupleDColumn("pi+Edep");   
   manager -> FinishNtuple();                                   
 
   //Create Energy Deposition of proton                           
@@ -86,6 +86,16 @@ void AnalysisManager::Initialise()
   manager -> CreateNtuple("nEdep", "neutronEdep");                    
   fNtColId[6] = manager -> CreateNtupleDColumn("neutronEdep");             
   manager -> FinishNtuple();                                              
+
+  //Create Energy Deposition of pi-                              
+  manager -> CreateNtuple("piMinusEdep", "pi-Edep");                  
+  fNtColId[7] = manager -> CreateNtupleDColumn("pi-Edep");           
+  manager -> FinishNtuple();                                         
+
+  //Create Energy Deposition of pi0                                    
+  manager -> CreateNtuple("piZeroEdep", "pi0Edep");                   
+  fNtColId[8] = manager -> CreateNtupleDColumn("pi0Edep");             
+  manager -> FinishNtuple();                                           
 
   //factoryOn = true;    
 }
@@ -120,27 +130,55 @@ void AnalysisManager::StoreElectronEdep(G4double edep)
   manager -> AddNtupleRow(2); 
 }
 
-//void AnalysisManager::StorePositronEdep(G4double edep)        
-//{                                                             
-//  auto manager = G4AnalysisManager::Instance(); 
-//  manager -> FillNtupleDColumn(3, fNtColId[2], edep);         
-//  manager -> AddNtupleRow(3);                                 
-//}                                                             
-//
-//void AnalysisManager::StorePhotonEdep(G4double edep)        
-//{                                                             
-//  auto manager = G4AnalysisManager::Instance(); 
-//  manager -> FillNtupleDColumn(4, fNtColId[3], edep);         
-//  manager -> AddNtupleRow(4);                                 
-//}                                                             
-//
-//void AnalysisManager::StorePionEdep(G4double edep)           
-//{                                                              
-//  auto manager = G4AnalysisManager::Instance();  
-//  manager -> FillNtupleDColumn(5, fNtColId[4], edep);          
-//  manager -> AddNtupleRow(5);                                  
-//}                                                              
+void AnalysisManager::StorePositronEdep(G4double edep)        
+{                                                             
+  auto manager = G4AnalysisManager::Instance(); 
+  manager -> FillNtupleDColumn(3, fNtColId[2], edep);         
+  manager -> AddNtupleRow(3);                                 
+}                                                             
+
+void AnalysisManager::StorePhotonEdep(G4double edep)        
+{                                                             
+  auto manager = G4AnalysisManager::Instance(); 
+  manager -> FillNtupleDColumn(4, fNtColId[3], edep);         
+  manager -> AddNtupleRow(4);                                 
+}                                                             
+
+void AnalysisManager::StorePionPlusEdep(G4double edep)           
+{                                                              
+  auto manager = G4AnalysisManager::Instance();  
+  manager -> FillNtupleDColumn(5, fNtColId[4], edep);          
+  manager -> AddNtupleRow(5);                                  
+}                                                              
  
+void AnalysisManager::StoreProtonEdep(G4double edep)              
+{                                                               
+  auto manager = G4AnalysisManager::Instance();                 
+  manager -> FillNtupleDColumn(6, fNtColId[5], edep);           
+  manager -> AddNtupleRow(6);                                   
+}                                                               
+
+void AnalysisManager::StoreNeutronEdep(G4double edep)               
+{                                                                  
+  auto manager = G4AnalysisManager::Instance();                    
+  manager -> FillNtupleDColumn(7, fNtColId[6], edep);              
+  manager -> AddNtupleRow(7);                                      
+}                                                                  
+
+void AnalysisManager::StorePionMinusEdep(G4double edep)            
+{                                                                 
+  auto manager = G4AnalysisManager::Instance();                   
+  manager -> FillNtupleDColumn(8, fNtColId[7], edep);             
+  manager -> AddNtupleRow(8);                                     
+}                                                                 
+
+void AnalysisManager::StorePionZeroEdep(G4double edep)             
+{                                                                   
+  auto manager = G4AnalysisManager::Instance();                     
+  manager -> FillNtupleDColumn(9, fNtColId[8], edep);               
+  manager -> AddNtupleRow(9);                                       
+}                                                                   
+
 void AnalysisManager::Finish() 
 {   
   auto manager = G4AnalysisManager::Instance();     

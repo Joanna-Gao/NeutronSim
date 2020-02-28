@@ -27,13 +27,21 @@ public:
   void StoreTotalEdep(G4double edep);
 
   void StoreElectronEdep(G4double edep);
-//  
-//  void StorePositronEdep(G4double edep); 
-//
-//  void StorePhotonEdep(G4double edep);   
-//
-//  void StorePionEdep(G4double edep);     
   
+  void StorePositronEdep(G4double edep); 
+
+  void StorePhotonEdep(G4double edep);   
+
+  void StorePionPlusEdep(G4double edep);     
+
+  void StoreProtonEdep(G4double edep);      
+
+  void StoreNeutronEdep(G4double edep);       
+
+  void StorePionMinusEdep(G4double edep);     
+
+  void StorePionZeroEdep(G4double edep);      
+
   void Finish();
   // Close the ROOT file with all the results stored in nutples 
 
