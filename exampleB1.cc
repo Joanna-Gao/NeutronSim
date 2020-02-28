@@ -66,11 +66,10 @@ int main(int argc,char** argv)
 #else
   G4RunManager* runManager = new G4RunManager;
 #endif
-
-  AnalysisManager* analysisManager = new AnalysisManager();
   
   // Set mandatory initialization classes
   //
+  AnalysisManager* analysisManager = new AnalysisManager();
   // Detector construction
   runManager->SetUserInitialization(new DetectorConstruction());
 
@@ -113,8 +112,8 @@ int main(int argc,char** argv)
   // in the main() program !
   
   delete visManager;
-  delete runManager;
   delete analysisManager;
+  delete runManager;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

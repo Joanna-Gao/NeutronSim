@@ -42,12 +42,12 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(EventAction* eventAction,
-                               AnalysisManager* analysisMan)
+                               AnalysisManager* analysis)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
   fScoringVolume(0)
 {
-  analysisManager = analysisMan;
+  analysisManager = analysis;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -74,6 +74,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   // check if we are in scoring volume
   if (volume != fScoringVolume) return;
 
+
+  // the following steps are to store individual particle Edep
+  previousTrackID = trackID;
+
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
   //G4cout << "GetTotalEnergyDeposit: " << edepStep << G4endl;
@@ -82,16 +86,32 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   // attempt to extract particle name 
   G4Track *track = step->GetTrack();
   
+  trackID = track->GetTrackID();
+
   const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
 
   G4ParticleDefinition *particle = dynParticle->GetDefinition();
 
   G4double kinEnergy = dynParticle->GetKineticEnergy();
 
-  G4String particleName = particle->GetParticleName();
+  particleName = particle->GetParticleName();
 
-  //G4cout << counter << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
-  //    << " MeV" << G4endl;
+  if (trackID != previousTrackID) {
+    G4cout << "Track ID has changed from " << previousTrackID << " to " << trackID << G4endl;
+    G4cout << "Accumulated EnergyDeposit: " << localEdep << " stored, initialising..." << G4endl;
+    if (particleName == "e-") analysisManager->StoreElectronEdep(localEdep);
+
+
+    localEdep = 0;
+  }
+  else {
+    G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;
+    localEdep += edepStep;
+    G4cout << "Accumulated energy deposit: " << localEdep << G4endl;
+  }
+
+  G4cout << trackID << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
+      << " MeV" << G4endl;
 
   counter++;
       

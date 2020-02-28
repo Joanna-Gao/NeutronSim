@@ -45,17 +45,21 @@ class SteppingAction : public G4UserSteppingAction
 {
   public:
     SteppingAction(EventAction* eventAction,
-                   AnalysisManager* analysisMan);
+                   AnalysisManager* analysis);
     virtual ~SteppingAction();
 
     // method from the base class
     virtual void UserSteppingAction(const G4Step*);
 
   private:
-    EventAction*  fEventAction;
-    AnalysisManager* analysisManager;
-    G4LogicalVolume* fScoringVolume;
-    G4int         counter = 0;
+    EventAction*         fEventAction;
+    AnalysisManager*  analysisManager;
+    G4LogicalVolume*   fScoringVolume;
+    G4int                 counter = 0;
+    G4String             particleName;
+    G4int             previousTrackID; 
+    G4int                 trackID = 0;
+    G4double            localEdep = 0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

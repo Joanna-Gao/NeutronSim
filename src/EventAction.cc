@@ -37,12 +37,12 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction* runAction, AnalysisManager* analysisMan)
+EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
 : G4UserEventAction(),
   fRunAction(runAction),
   fEdep(0.)
 {
-  analysisManager = analysisMan;
+  analysisManager = analysis;
 } 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -66,6 +66,7 @@ void EventAction::EndOfEventAction(const G4Event*)
 
   // fill histograms
   //analysisManager->FillH1(1, fEdep);
+  analysisManager->FillTotalEdepHist(fEdep);
 
   // fill ntuple
   analysisManager->StoreTotalEdep(fEdep);

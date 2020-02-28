@@ -36,10 +36,10 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::ActionInitialization(AnalysisManager* analysisMan)
+ActionInitialization::ActionInitialization(AnalysisManager* analysis)
  : G4VUserActionInitialization()
 {
-  analysisManager = analysisMan;
+  analysisManager = analysis;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
