@@ -55,7 +55,6 @@ class SteppingAction : public G4UserSteppingAction
     EventAction*         fEventAction;
     AnalysisManager*  analysisManager;
     G4LogicalVolume*   fScoringVolume;
-    G4int                 counter = 0;
     G4String             particleName;
     G4int             previousTrackID; 
     G4int                 trackID = 0;

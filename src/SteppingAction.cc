@@ -80,7 +80,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
-  G4cout << "GetTotalEnergyDeposit: " << edepStep << G4endl;
+  //G4cout << "GetTotalEnergyDeposit: " << edepStep << G4endl;
   fEventAction->AddEdep(edepStep); 
 
   // attempt to extract particle name 
@@ -97,28 +97,33 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   particleName = particle->GetParticleName();
 
   if (trackID != previousTrackID) {
-    G4cout << "Track ID has changed from " << previousTrackID << " to " << trackID << G4endl;
+    //G4cout << "Track ID has changed from " << previousTrackID << " to " << trackID << G4endl;
+    if (particleName == "neutron") 
     G4cout << "Accumulated EnergyDeposit: " << localEdep << " stored, initialising..." << G4endl;
-    //if (particleName == "e-") analysisManager->StoreElectronEdep(localEdep);
-    //if (particleName == "e+") analysisManager->StorePositronEdep(localEdep);
-    //if (particleName == "gamma") analysisManager->StorePhotonEdep(localEdep); 
-    if (particleName == "neutron" || kinEnergy == 0.) analysisManager->StorePositronEdep(localEdep); // kinEnergy < 10**(-8)??
+
+    if (particleName == "neutron") analysisManager->StoreNeutronEdep(localEdep); 
     if (particleName == "proton") analysisManager->StoreProtonEdep(localEdep);  
-    if (particleName == "pi+") analysisManager->StorePionPlusEdep(localEdep);
-    if (particleName == "pi-") analysisManager->StorePionMinusEdep(localEdep);
-    if (particleName == "pi0") analysisManager->StorePionZeroEdep(localEdep);  
+    if (particleName == "pi+") analysisManager->StorePiPlusEdep(localEdep);   
+    if (particleName == "pi-") analysisManager->StorePiMinusEdep(localEdep);    
+    if (particleName == "pi0") analysisManager->StorePiZeroEdep(localEdep);    
+    if (particleName == "kaon+") analysisManager->StoreKaonPlusEdep(localEdep);      
+    if (particleName == "kaon-") analysisManager->StoreKaonMinusEdep(localEdep);     
+    if (particleName == "kaon0") analysisManager->StoreKaonZeroEdep(localEdep);      
+
+
     localEdep = 0;
   }
   else {
-    G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;
+    
     localEdep += edepStep;
-    G4cout << "Accumulated energy deposit: " << localEdep << G4endl;
+    if (particleName == "neutron"){
+      G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;  
+      G4cout << "Accumulated energy deposit: " << localEdep << G4endl; 
+    }   
   }
-
-  G4cout << trackID << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV)
-      << " MeV" << G4endl;
-
-  counter++;
+  if (particleName == "neutron"){ 
+  G4cout << trackID << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV) << " MeV" << G4endl;
+  }
       
 }
 
