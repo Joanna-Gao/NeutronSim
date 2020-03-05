@@ -96,7 +96,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   particleName = particle->GetParticleName();
 
-  if (trackID != previousTrackID) {
+  if (trackID != previousTrackID && previousTrackID != 0) {
     //G4cout << "Track ID has changed from " << previousTrackID << " to " << trackID << G4endl;
     //G4cout << "Accumulated EnergyDeposit: " << localEdep << " stored, initialising..." << G4endl;
 
