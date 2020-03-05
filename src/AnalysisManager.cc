@@ -28,7 +28,7 @@ void AnalysisManager::Initialise()
   // Create directories  
   manager->SetNtupleDirectoryName("ProtonAnalysis");
   
-  G4String fileName = "ProtonAnalysis";
+  G4String fileName = "MuonAnalysis";
 
   G4bool fileOpen = manager->OpenFile(fileName);
   if (!fileOpen) {
