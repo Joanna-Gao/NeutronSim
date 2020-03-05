@@ -96,7 +96,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   particleName = particle->GetParticleName();
 
-  if (trackID != previousTrackID || previousTrackID != 0) {
+  if (trackID != previousTrackID && previousTrackID != 0) {
     
     G4cout << "Track ID has changed from " 
            << previousTrackID 
