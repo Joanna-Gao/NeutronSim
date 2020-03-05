@@ -23,16 +23,18 @@ void AnalysisManager::Initialise()
   auto manager = G4AnalysisManager::Instance();
   
   manager->SetVerboseLevel(0);
- 
-  // Create a root file
-  G4String fileName = "ProtonAnalysis";
+  manager->SetNtupleMerging(true);
 
   // Create directories  
-  //manager->SetNtupleDirectoryName("ProtonAnalysis");                                                                                                         
+  manager->SetNtupleDirectoryName("ProtonAnalysis");                    
+
+  // Create a root file                 
+  G4String fileName = "ProtonAnalysis"; 
+
   G4bool fileOpen = manager->OpenFile(fileName);
   if (!fileOpen) {
-    G4cout << "\n---> HistoManager::book(): cannot open " 
-           << fileName[1] 
+    G4cout << "\n---> AnalysisManager::Initialise(): cannot open " 
+           << manager->GetFileName()
            << G4endl;
     return;
   }

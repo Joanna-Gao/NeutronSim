@@ -96,10 +96,18 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   particleName = particle->GetParticleName();
 
-  if (trackID != previousTrackID) {
-    //G4cout << "Track ID has changed from " << previousTrackID << " to " << trackID << G4endl;
-    if (particleName == "neutron") 
-    G4cout << "Accumulated EnergyDeposit: " << localEdep << " stored, initialising..." << G4endl;
+  if (trackID != previousTrackID || previousTrackID != 0) {
+    
+    G4cout << "Track ID has changed from " 
+           << previousTrackID 
+           << " to " 
+           << trackID 
+           << G4endl;
+    
+    G4cout << "Accumulated EnergyDeposit: " 
+           << localEdep 
+           << " stored, initialising..." 
+           << G4endl;
 
     if (particleName == "neutron") analysisManager->StoreNeutronEdep(localEdep); 
     if (particleName == "proton") analysisManager->StoreProtonEdep(localEdep);  
@@ -114,17 +122,22 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     localEdep = 0;
   }
   else {
+    G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;     
     
     localEdep += edepStep;
-    if (particleName == "neutron"){
-      G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;  
-      G4cout << "Accumulated energy deposit: " << localEdep << G4endl; 
-    }   
+
+    G4cout << "Accumulated energy deposit: " << localEdep << G4endl; 
+    
   }
-  if (particleName == "neutron"){ 
-  G4cout << trackID << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV) << " MeV" << G4endl;
-  }
-      
+ 
+  G4cout << trackID << ". "            
+         << particleName               
+         << ": kinetic energy of "     
+         << (kinEnergy / CLHEP::MeV)   
+         << " MeV"                     
+         << G4endl;                    
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
