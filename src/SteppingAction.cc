@@ -98,32 +98,31 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   if (trackID != previousTrackID) {
     //G4cout << "Track ID has changed from " << previousTrackID << " to " << trackID << G4endl;
-    if (particleName == "neutron") 
-    G4cout << "Accumulated EnergyDeposit: " << localEdep << " stored, initialising..." << G4endl;
+    //G4cout << "Accumulated EnergyDeposit: " << localEdep << " stored, initialising..." << G4endl;
 
-    if (particleName == "neutron") analysisManager->StoreNeutronEdep(localEdep); 
-    if (particleName == "proton") analysisManager->StoreProtonEdep(localEdep);  
-    if (particleName == "pi+") analysisManager->StorePiPlusEdep(localEdep);   
-    if (particleName == "pi-") analysisManager->StorePiMinusEdep(localEdep);    
-    if (particleName == "pi0") analysisManager->StorePiZeroEdep(localEdep);    
-    if (particleName == "kaon+") analysisManager->StoreKaonPlusEdep(localEdep);      
-    if (particleName == "kaon-") analysisManager->StoreKaonMinusEdep(localEdep);     
-    if (particleName == "kaon0") analysisManager->StoreKaonZeroEdep(localEdep);      
-
+    if (particleName == "mu-") analysisManager->StoreMuMinusKE(kinEnergy);  
+    if (particleName == "mu+") analysisManager->StoreMuPlusKE(kinEnergy);  
+    if (particleName == "mu-") analysisManager->StoreMuMinusEdep(localEdep); 
+    if (particleName == "mu+") analysisManager->StoreMuPlusEdep(localEdep);  
 
     localEdep = 0;
   }
   else {
     
     localEdep += edepStep;
-    if (particleName == "neutron"){
-      G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;  
-      G4cout << "Accumulated energy deposit: " << localEdep << G4endl; 
-    }   
+   
+    //G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;  
+    //G4cout << "Accumulated energy deposit: " << localEdep << G4endl; 
+   
   }
-  if (particleName == "neutron"){ 
-  G4cout << trackID << ". " << particleName << ": kinetic energy of " << (kinEnergy / CLHEP::MeV) << " MeV" << G4endl;
-  }
+  
+  //G4cout << trackID << ". " 
+  //       << particleName 
+  //       << ": kinetic energy of " 
+  //       << (kinEnergy / CLHEP::MeV) 
+  //       << " MeV" 
+  //       << G4endl;
+  
       
 }
 
