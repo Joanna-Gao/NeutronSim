@@ -42,10 +42,8 @@ void AnalysisManager::Initialise()
   manager->SetFirstHistoId(1);
   manager->SetFirstNtupleId(1);
   //manager->SetNtupleMerging(true);
-
-  G4cout << "Creating Histogram" << G4endl;
-  manager->CreateH1("TotalEdep","Total Edep in water", 100, 0., 1*GeV);
-  G4cout << "Histogram Created" << G4endl;
+  
+  manager->CreateH1("TotalEdep","Total Edep in water", 100, 0., 1*TeV);
 
   //Create Total Energy Deposition Ntuple
   InitialiseNtuple(0, "TEdep", "TotalEdep", "TotalEdep");
@@ -82,6 +80,12 @@ void AnalysisManager::Initialise()
                                                                    
   //Create Energy Deposition of kaon0                                
   InitialiseNtuple(11, "kaonZEdep", "kaonZeroEdep", "kaonZeroEdep");      
+
+  //Create Energy Deposition of mu- ntuple                                      
+  InitialiseNtuple(12, "muMEdep", "muMinusEdep", "muMinusEdep");
+
+  //Create Energy Deposition of mu+ ntuple                                       
+  InitialiseNtuple(13, "muPEdep", "muPlusEdep", "muPlusEdep");                 
 
   //factoryOn = true;    
 }
@@ -191,6 +195,20 @@ void AnalysisManager::StoreKaonZeroEdep(G4double edep)
   manager -> FillNtupleDColumn(12, fNtColId[11], edep);                
   manager -> AddNtupleRow(12);                                        
 }                                                                    
+
+void AnalysisManager::StoreMuMinusEdep(G4double edep)                 
+{                                                                       
+  auto manager = G4AnalysisManager::Instance();                         
+  manager -> FillNtupleDColumn(13, fNtColId[12], edep);                 
+  manager -> AddNtupleRow(13);                                          
+}                                                                       
+
+void AnalysisManager::StoreMuPlusEdep(G4double edep)                     
+{                                                                        
+  auto manager = G4AnalysisManager::Instance();                          
+  manager -> FillNtupleDColumn(14, fNtColId[13], edep);                  
+  manager -> AddNtupleRow(14);                                           
+}                                                                        
 
 void AnalysisManager::Finish() 
 {   

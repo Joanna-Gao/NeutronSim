@@ -63,7 +63,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Envelope parameters
   //
   //G4double env_sizeXY = 20*cm, env_sizeZ = 30*cm;
-  G4double env_rmin = 0.*m, env_rmax = 20.*m, env_height = 40.*m;
+  G4double env_rmin = 0.*m, env_rmax = 20.*m, env_height = 20.*m; //zHALFlength!
   G4double angleMin = 0.*deg, angleMax = 360.*deg;
 
   G4Material* env_mat = nist->FindOrBuildMaterial("G4_WATER");

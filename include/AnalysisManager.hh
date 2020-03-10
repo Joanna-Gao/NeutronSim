@@ -51,6 +51,10 @@ public:
                                         
   void StoreKaonZeroEdep(G4double edep);  
 
+  void StoreMuMinusEdep(G4double edep);
+
+  void StoreMuPlusEdep(G4double edep);
+
   void Finish();
   // Close the ROOT file with all the results stored in nutples 
 

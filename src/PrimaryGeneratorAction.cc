@@ -57,7 +57,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     = particleTable->FindParticle(particleName="proton");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticleEnergy(1.*GeV);
+  fParticleGun->SetParticleEnergy(1.*TeV);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -109,8 +109,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }
 
   G4double size = 0.8; 
-  G4double primaryParticleLocation = 0.8;//1.5; // With respect to the length of 40m
+  G4double primaryParticleLocation = -1.025; // With respect to the length of 40m
                                         // Proportionalities:
+                                        // 1m outside = 1.025 
                                         // 10m outside = 1.25
                                         // 20m outside = 1.50
                                         // 30m outside = 1.75
