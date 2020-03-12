@@ -27,7 +27,7 @@ find_package(ROOT REQUIRED)
 # Setup Geant4 include directories and compile definitions
 # Setup include directory for this project
 #
-# include(${Geant4_USE_FILE})
+include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include
                     ${Geant_INCLUDE_DIR}
                     ${ROOT_INCLUDE_DIR})
