@@ -23,56 +23,59 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file analysis/AnaEx02/include/HistoManager.hh
+/// \brief Definition of the HistoManager class
 //
-/// \file EventAction.cc
-/// \brief Implementation of the EventAction class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "EventAction.hh"
-#include "RunAction.hh"
-#include "AnalysisManager.hh"
+#ifndef HistoManager_h
+#define HistoManager_h 1
 
-#include "G4Event.hh"
-#include "G4RunManager.hh"
-#include "G4DynamicParticle.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
-: G4UserEventAction(),
-  fRunAction(runAction),
-  fEdep(0.)
+class TFile;
+class TTree;
+class TH1D;
+
+const G4int kMaxHisto = 1;
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+class HistoManager
 {
-  analysisManager = analysis;
-} 
+  public:
+    HistoManager();
+   ~HistoManager();
+   
+    void Book();
+    void Save();
+
+    void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
+    void Normalize(G4int id, G4double fac);    
+
+    void FillTEdepNtuple(G4double totalEnergyAbs);
+
+    void FillParticleInfoNtuple(G4int eventID,
+                                std::vector<int> * particleID, 
+                                std::vector<double> * edep);
+        
+  private:
+    TFile*                fRootFile;
+    TH1D*                 fHisto[kMaxHisto];            
+    TTree*                fTEdepNtuple;    
+    TTree*                fParticleInfoNtuple;    
+
+    G4double              fTEdep;
+    G4int                 fEventID;
+    std::vector<int>    * fParticleID;
+    std::vector<double> * fEdep;
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::~EventAction()
-{}
+#endif
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void EventAction::BeginOfEventAction(const G4Event*)
-{    
-  fEdep = 0.;
-  fEventID = 0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void EventAction::EndOfEventAction(const G4Event*)
-{   
-  // accumulate statistics in run action
-  fRunAction->AddEdep(fEdep); 
-
-  // fill histograms
-  //analysisManager->FillH1(1, fEdep);
-  analysisManager->FillTotalEdepHist(fEdep);
-
-  // fill ntuple
-  analysisManager->StoreTotalEdep(fEdep);
-
-  ++fEventID;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
