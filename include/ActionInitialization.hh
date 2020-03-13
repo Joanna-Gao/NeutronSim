@@ -33,6 +33,8 @@
 #include "G4VUserActionInitialization.hh"
 #include "AnalysisManager.hh"
 
+class HistoManager;
+
 /// Action initialization class.
 
 class ActionInitialization : public G4VUserActionInitialization
