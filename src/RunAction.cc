@@ -31,6 +31,7 @@
 #include "PrimaryGeneratorAction.hh"
 #include "DetectorConstruction.hh"
 #include "AnalysisManager.hh"
+#include "HistoManager.hh" 
 
 #include "G4RunManager.hh"
 #include "G4Run.hh"

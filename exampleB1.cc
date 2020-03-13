@@ -30,6 +30,7 @@
 #include "DetectorConstruction.hh"
 #include "ActionInitialization.hh"
 #include "AnalysisManager.hh"
+#include "HistoManager.hh"
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"

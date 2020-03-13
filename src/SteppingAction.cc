@@ -31,6 +31,8 @@
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
 #include "AnalysisManager.hh"
+#include "HistoManager.hh" 
+
 
 #include "G4Step.hh"
 #include "G4Track.hh"
