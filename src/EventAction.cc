@@ -30,7 +30,6 @@
 #include "EventAction.hh"
 #include "RunAction.hh"
 #include "AnalysisManager.hh"
-#include "HistoManager.hh" 
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -41,10 +40,11 @@
 EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
 : G4UserEventAction(),
   fRunAction(runAction),
-  fEdep(0.)
-{
-  analysisManager = analysis;
-} 
+  fAnalysisManager(analysis),
+  fEdep(0.),
+  fParticleID(0), 
+  fStoredEdep(0.) 
+{} 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -61,19 +61,19 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::EndOfEventAction(const G4Event*)
+void EventAction::EndOfEventAction(const G4Event* event)
 {   
   // accumulate statistics in run action
   fRunAction->AddEdep(fEdep); 
 
-  // fill histograms
-  //analysisManager->FillH1(1, fEdep);
-  analysisManager->FillTotalEdepHist(fEdep);
+  // Fill histograms
+  fAnalysisManager->FillHisto(0, fEdep);
 
-  // fill ntuple
-  analysisManager->StoreTotalEdep(fEdep);
+  // Fill ntuple
+  fAnalysisManager->FillTotalEdepNtuple(fEdep);
 
-  ++fEventID;
+  fEventID = event->GetEventID();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

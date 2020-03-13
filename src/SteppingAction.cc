@@ -31,8 +31,6 @@
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
 #include "AnalysisManager.hh"
-#include "HistoManager.hh" 
-
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -47,10 +45,11 @@ SteppingAction::SteppingAction(EventAction* eventAction,
                                AnalysisManager* analysis)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
-  fScoringVolume(0)
-{
-  analysisManager = analysis;
-}
+  fAnalysisManager(analysis),
+  fScoringVolume(0),
+  fParticleID(0),
+  fStoredEdep(0.)
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -78,7 +77,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
 
   // the following steps are to store individual particle Edep
-  previousTrackID = trackID;
+  fPreviousTrackID = fTrackID;
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
@@ -88,7 +87,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   // attempt to extract particle name 
   G4Track *track = step->GetTrack();
   
-  trackID = track->GetTrackID();
+  fTrackID = track->GetTrackID();
 
   const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
 
@@ -96,40 +95,44 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   G4double kinEnergy = dynParticle->GetKineticEnergy();
 
-  particleName = particle->GetParticleName();
+  fParticleName = particle->GetParticleName();
 
   G4int eventID = fEventAction->GetEventID();
   G4int particleID = particle->GetPDGEncoding();
 
-  if (trackID != previousTrackID && previousTrackID != 0) {
+  if (fTrackID != fPreviousTrackID && fPreviousTrackID != 0) {
     
     //G4cout << "Track ID has changed from " 
-    //       << previousTrackID 
+    //       << fPreviousTrackID 
     //       << " to " 
-    //       << trackID 
+    //       << fTrackID 
     //       << G4endl;
     //
     //G4cout << "Accumulated EnergyDeposit: " 
-    //       << localEdep 
+    //       << fLocalEdep 
     //       << " stored, initialising..." 
     //       << G4endl;
+    //
+    
+    // Store the particle IDs and the energy deposited in two 1D vectors
+    // Next step is to only store the ones we are interested
+    //
+    fParticleID.push_back(particleID);
+    fStoredEdep.push_back(fLocalEdep);
 
-    //if (particleName == "gamma") analysisManager->StorePhotonEdep(localEdep);    
-    analysisManager->StoreParticleInfo(eventID, particleID, localEdep);
-    //if (particleID > pow(10,6)) {G4cout<<particleID<<" is "<<particleName<<G4endl;}
-    localEdep = 0;
+    fLocalEdep = 0;
   }
   else {
     //G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;     
     
-    localEdep += edepStep;
+    fLocalEdep += edepStep;
 
-    //G4cout << "Accumulated energy deposit: " << localEdep << G4endl; 
+    //G4cout << "Accumulated energy deposit: " << fLocalEdep << G4endl; 
     
   }
  
-  //G4cout << trackID << ". "            
-  //       << particleName               
+  //G4cout << fTrackID << ". "            
+  //       << fParticleName               
   //       << particleID
   //       << ": kinetic energy of "     
   //       << (kinEnergy / CLHEP::MeV)   

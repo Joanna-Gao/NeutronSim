@@ -52,10 +52,12 @@ class EventAction : public G4UserEventAction
     G4int GetEventID() { return fEventID; }
 
   private:
-    RunAction*            fRunAction;
-    G4double                   fEdep;
-    AnalysisManager* analysisManager;
-    G4int                   fEventID;
+    RunAction*             fRunAction;
+    G4double                    fEdep;
+    AnalysisManager* fAnalysisManager;
+    G4int                    fEventID;
+    std::vector<int>      fParticleID; 
+    std::vector<double>   fStoredEdep;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

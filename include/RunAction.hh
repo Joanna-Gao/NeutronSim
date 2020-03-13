@@ -58,7 +58,7 @@ class RunAction : public G4UserRunAction
   private:
     G4Accumulable<G4double> fEdep;
     G4Accumulable<G4double> fEdep2;
-    AnalysisManager*        analysisManager;
+    AnalysisManager*        fAnalysisManager;
 };
 
 #endif
