@@ -41,17 +41,21 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HistoManager::HistoManager()
-:fRootFile(0), 
- fNtuple1(0), fNtuple2(0), 
- fEabs(0.), fEgap(0.) ,fLabs(0.), fLgap(0.)
+  :fRootFile(0), 
+   fTEdepNtuple(0), 
+   fParticleInfoNtuple(0), 
+   fTEdep(0.),
+   fEventID(0),
+   fParticleID(0),
+   fEdep(0.)
 {
       
   // histograms
   for (G4int k=0; k<kMaxHisto; k++) fHisto[k] = 0;
     
   // ntuple
-  fNtuple1 = 0;
-  fNtuple2 = 0;
+  fTEdepNtuple = 0;
+  fParticleInfoNtuple = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -68,7 +72,7 @@ void HistoManager::Book()
   // Creating a tree container to handle histograms and ntuples.
   // This tree is associated to an output file.
   //
-  G4String fileName = "AnaEx02.root";
+  G4String fileName = "ProtonAnalysis.root";
   fRootFile = new TFile(fileName,"RECREATE");
   if (! fRootFile) {
     G4cout << " HistoManager::Book :" 
@@ -78,27 +82,23 @@ void HistoManager::Book()
   }
   
   // id = 0
-  fHisto[0] = new TH1D("EAbs", "Edep in absorber (MeV)", 100, 0., 800*CLHEP::MeV);
-  // id = 1
-  fHisto[1] = new TH1D("EGap", "Edep in gap (MeV)", 100, 0., 100*CLHEP::MeV);
-  // id = 2
-  fHisto[2] = new TH1D("LAbs", "trackL in absorber (mm)", 100, 0., 1*CLHEP::m);
-  // id = 3
-  fHisto[3] = new TH1D("LGap", "trackL in gap (mm)", 100, 0., 50*CLHEP::cm);
+  fHisto[0] = new TH1D("TotalEdep", "Total Energy Deposited in Water (GeV)",
+                        100, 0., 1000000*CLHEP::MeV);
 
   for ( G4int i=0; i<kMaxHisto; ++i ) {
     if (! fHisto[i]) G4cout << "\n can't create histo " << i << G4endl;
   }  
 
   // create 1st ntuple
-  fNtuple1 = new TTree("Ntuple1", "Edep");
-  fNtuple1->Branch("Eabs", &fEabs, "Eabs/D");
-  fNtuple1->Branch("Egap", &fEgap, "Egap/D");
+  fTEdepNtuple = new TTree("TotalEdep", "Total Energy Deposited in Water");
+  fTEdepNtuple->Branch("TotalEdep", &fTEdep, "TotalEdep/D");
 
   // create 2nd ntuple 
-  fNtuple2 = new TTree("Ntuple2", "TrackL");
-  fNtuple2->Branch("Labs", &fLabs, "Labs/D");
-  fNtuple2->Branch("Lgap", &fLgap, "Lgap/D");
+  fParticleInfoNtuple = new TTree("ParticleInfo", 
+                        "Information about Particles that Reached the Water");
+  fParticleInfoNtuple->Branch("EventID", &fEventID, "EventID/I"); 
+  fParticleInfoNtuple->Branch("ParticleID", fParticleID, "ParticleID[n]/I");
+  fParticleInfoNtuple->Branch("Edep", fEdep, "Edep[n]/D");
  
   G4cout << "\n----> Output file is open in " << fileName << G4endl;
 }
@@ -117,7 +117,7 @@ void HistoManager::Save()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::FillHisto(G4int ih, G4double xbin, G4double weight)
+void HistoManager::FillHisto(G4int ih=0, G4double xbin, G4double weight)
 {
   if (ih >= kMaxHisto) {
     G4cerr << "---> warning from HistoManager::FillHisto() : histo " << ih
@@ -130,7 +130,7 @@ void HistoManager::FillHisto(G4int ih, G4double xbin, G4double weight)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::Normalize(G4int ih, G4double fac)
+void HistoManager::Normalize(G4int ih=0, G4double fac)
 {
   if (ih >= kMaxHisto) {
     G4cout << "---> warning from HistoManager::Normalize() : histo " << ih
@@ -142,36 +142,25 @@ void HistoManager::Normalize(G4int ih, G4double fac)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::FillNtuple(G4double energyAbs, G4double energyGap,
-                              G4double trackLAbs , G4double trackLGap )
+void HistoManager::FillTEdepNtuple(G4double totalEnergyAbs)
 {
-  fEabs = energyAbs;
-  fEgap = energyGap;
-  fLabs = trackLAbs;
-  fLgap = trackLGap;
-
-  if (fNtuple1) fNtuple1->Fill();
-  if (fNtuple2) fNtuple2->Fill();
+  fEabs = totalEnergyAbs;
+  
+  if (fTEdepNtuple) fTEdepNtuple->Fill();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void HistoManager::PrintStatistic()
-{
-  G4cout << "\n ----> print histograms statistic \n" << G4endl;
-  for ( G4int i=0; i<kMaxHisto; ++i ) {
-    TH1D* h1 = fHisto[i];
-    const G4String name = h1->GetName();  
+void HistoManager::FillParticleInfoNtuple(G4int eventID, 
+                                          std::vector<int> * particleID,
+                                          std::vector<double> * edep)
+{                                                                                
+  fEventID = eventID;
+  fParticleID = particleID;
+  fEdep = edep;
 
-    G4String unitCategory;
-    if (name[0] == 'E' ) unitCategory = "Energy"; 
-    if (name[0] == 'L' ) unitCategory = "Length";
+  if (fParticleInfoNtuple) fParticleInfoNtuple->Fill();                          
+}                                                                                
+                                                                                 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
 
-    G4cout << name
-           << ": mean = " << G4BestUnit(h1->GetMean(), unitCategory) 
-           << " rms = " << G4BestUnit(h1->GetRMS(), unitCategory ) 
-           << G4endl;
-  }
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

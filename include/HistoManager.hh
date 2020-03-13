@@ -41,7 +41,7 @@ class TFile;
 class TTree;
 class TH1D;
 
-const G4int kMaxHisto = 4;
+const G4int kMaxHisto = 1;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -57,21 +57,22 @@ class HistoManager
     void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
     void Normalize(G4int id, G4double fac);    
 
-    void FillNtuple(G4double energyAbs, G4double energyGap,
-                    G4double trackLAbs, G4double trackLGap);
-    
-    void PrintStatistic();
+    void FillTEdepNtuple(G4double totalEnergyAbs);
+
+    void FillParticleInfoNtuple(G4int eventID,
+                                std::vector<int> * particleID, 
+                                std::vector<double> * edep);
         
   private:
-    TFile*   fRootFile;
-    TH1D*    fHisto[kMaxHisto];            
-    TTree*   fNtuple1;    
-    TTree*   fNtuple2;    
+    TFile*                fRootFile;
+    TH1D*                 fHisto[kMaxHisto];            
+    TTree*                fTEdepNtuple;    
+    TTree*                fParticleInfoNtuple;    
 
-    G4double fEabs;
-    G4double fEgap;
-    G4double fLabs;
-    G4double fLgap;
+    G4double              fTEdep;
+    G4int                 fEventID;
+    std::vector<int>    * fParticleID;
+    std::vector<double> * fEdep;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
