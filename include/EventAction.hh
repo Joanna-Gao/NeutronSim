@@ -50,10 +50,13 @@ class EventAction : public G4UserEventAction
 
     void AddEdep(G4double edep) { fEdep += edep; }
 
+    G4int GetEventID() { return fEventID; }
+
   private:
     RunAction*            fRunAction;
     G4double                   fEdep;
     AnalysisManager* analysisManager;
+    G4int                   fEventID;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

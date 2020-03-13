@@ -31,8 +31,6 @@
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
 #include "AnalysisManager.hh"
-#include "HistoManager.hh" 
-
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -113,7 +111,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     //       << localEdep 
     //       << " stored, initialising..." 
     //       << G4endl;
-
+    
     analysisManager->StoreParticleInfo(eventID, particleID, localEdep);
     //if (particleID > pow(10,6)) {G4cout<<particleID<<" is "<<particleName<<G4endl;}
     localEdep = 0;

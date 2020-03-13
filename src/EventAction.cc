@@ -40,7 +40,8 @@
 EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
 : G4UserEventAction(),
   fRunAction(runAction),
-  fEdep(0.)
+  fEdep(0.),
+  fEventID(0)
 {
   analysisManager = analysis;
 } 
@@ -59,7 +60,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::EndOfEventAction(const G4Event*)
+void EventAction::EndOfEventAction(const G4Event* event)
 {   
   // accumulate statistics in run action
   fRunAction->AddEdep(fEdep); 
@@ -70,6 +71,8 @@ void EventAction::EndOfEventAction(const G4Event*)
 
   // fill ntuple
   analysisManager->StoreTotalEdep(fEdep);
+
+  fEventID = event->GetEventID();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
