@@ -31,6 +31,8 @@
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
 #include "AnalysisManager.hh"
+#include "HistoManager.hh" 
+
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -96,6 +98,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   particleName = particle->GetParticleName();
 
+  G4int eventID = fEventAction->GetEventID();
+  G4int particleID = particle->GetPDGEncoding();
+
   if (trackID != previousTrackID && previousTrackID != 0) {
     
     //G4cout << "Track ID has changed from " 
@@ -109,19 +114,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     //       << " stored, initialising..." 
     //       << G4endl;
 
-    if (particleName == "gamma") analysisManager->StorePhotonEdep(localEdep);    
-    if (particleName == "neutron") analysisManager->StoreNeutronEdep(localEdep); 
-    if (particleName == "proton") analysisManager->StoreProtonEdep(localEdep);  
-    if (particleName == "pi+") analysisManager->StorePiPlusEdep(localEdep);   
-    if (particleName == "pi-") analysisManager->StorePiMinusEdep(localEdep);    
-    if (particleName == "pi0") analysisManager->StorePiZeroEdep(localEdep);    
-    if (particleName == "kaon+") analysisManager->StoreKaonPlusEdep(localEdep);      
-    if (particleName == "kaon-") analysisManager->StoreKaonMinusEdep(localEdep);     
-    if (particleName == "kaon0") analysisManager->StoreKaonZeroEdep(localEdep);      
-    if (particleName == "mu+") analysisManager->StoreMuPlusEdep(localEdep);       
-    if (particleName == "mu-") analysisManager->StoreMuMinusEdep(localEdep);      
-
-
+    analysisManager->StoreParticleInfo(eventID, particleID, localEdep);
+    //if (particleID > pow(10,6)) {G4cout<<particleID<<" is "<<particleName<<G4endl;}
     localEdep = 0;
   }
   else {
@@ -135,6 +129,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
  
   //G4cout << trackID << ". "            
   //       << particleName               
+  //       << particleID
   //       << ": kinetic energy of "     
   //       << (kinEnergy / CLHEP::MeV)   
   //       << " MeV"                     
