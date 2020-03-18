@@ -30,7 +30,6 @@
 #include "SteppingAction.hh"
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
-#include "AnalysisManager.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -41,11 +40,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SteppingAction::SteppingAction(EventAction* eventAction,
-                               AnalysisManager* analysis)
+SteppingAction::SteppingAction(EventAction* eventAction)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
-  fAnalysisManager(analysis),
   fScoringVolume(0)
 {}
 

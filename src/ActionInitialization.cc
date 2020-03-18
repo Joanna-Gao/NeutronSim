@@ -67,7 +67,7 @@ void ActionInitialization::Build() const
   EventAction* eventAction = new EventAction(runAction, fAnalysisManager);
   SetUserAction(eventAction);
   
-  SetUserAction(new SteppingAction(eventAction, fAnalysisManager));
+  SetUserAction(new SteppingAction(eventAction));
 }  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

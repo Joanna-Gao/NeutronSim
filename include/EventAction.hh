@@ -61,8 +61,8 @@ class EventAction : public G4UserEventAction
     G4double                    fEdep;
     AnalysisManager* fAnalysisManager;
     G4int                    fEventID;
-    std::vector<int>      fParticleID; 
-    std::vector<double>   fStoredEdep;
+    std::vector<G4int>    fParticleID; 
+    std::vector<G4double> fStoredEdep;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

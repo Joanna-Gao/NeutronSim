@@ -101,8 +101,8 @@ void AnalysisManager::Initialise()
   fParticleInfoNtuple = new TTree("ParticleInfo", 
                         "Information about Particles that Reached the Water");
   fParticleInfoNtuple->Branch("EventID", &fEventID, "EventID/I"); 
-  //fParticleInfoNtuple->Branch("ParticleID", fParticleID, "ParticleID[fSize]/I");
-  //fParticleInfoNtuple->Branch("Edep", fEdep, "Edep[fSize]/D");
+  fParticleInfoNtuple->Branch("ParticleID", &fParticleID);
+  fParticleInfoNtuple->Branch("Edep", &fEdep);
  
   G4cout << "\n----> Output file is open in " << fileName << G4endl;
 
@@ -144,22 +144,19 @@ void AnalysisManager::FillHisto(G4int ih, G4double xvalue, G4double weight)
 void AnalysisManager::FillTotalEdepNtuple(G4double totalEnergyAbs)
 {
   fTEdep = totalEnergyAbs;
-  G4cout << "Storing total energy deposition, value: " << fTEdep << G4endl;
-  //if (fTEdepNtuple) 
-  fTEdepNtuple->Fill();
+ 
+  if (fTEdepNtuple) fTEdepNtuple->Fill();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void AnalysisManager::FillParticleInfoNtuple(G4int eventID)
-                                          //, G4int size, 
-                                          //std::vector<int> particleID,
-                                          //std::vector<double> edep)
+void AnalysisManager::FillParticleInfoNtuple(G4int eventID,
+                                             std::vector<G4int> particleID,
+                                             std::vector<G4double> edep)
 {                                                                                
   fEventID = eventID;
-  //fSize = size;
-  //fParticleID = particleID;
-  //fEdep = edep;
+  fParticleID = particleID;
+  fEdep = edep;
 
   if (fParticleInfoNtuple) fParticleInfoNtuple->Fill();                          
 }                                                                                
