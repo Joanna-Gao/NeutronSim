@@ -91,6 +91,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
   //    else size = size2;
   //  }
 
+  G4cout << "Event ID: " << fEventID << " finished." << G4endl;
+
   fAnalysisManager->FillParticleInfoNtuple(fEventID, fParticleID, fStoredEdep);
 
   fParticleID.clear();
