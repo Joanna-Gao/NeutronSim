@@ -33,8 +33,6 @@
 #include "G4VUserActionInitialization.hh"
 #include "AnalysisManager.hh"
 
-class HistoManager;
-
 /// Action initialization class.
 
 class ActionInitialization : public G4VUserActionInitialization
@@ -47,7 +45,7 @@ class ActionInitialization : public G4VUserActionInitialization
     virtual void Build() const;
 
   private:
-    AnalysisManager* analysisManager; 
+    AnalysisManager* fAnalysisManager; 
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

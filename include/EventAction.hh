@@ -33,6 +33,7 @@
 #include "AnalysisManager.hh"
 #include "G4UserEventAction.hh"
 #include "globals.hh"
+#include <vector>
 
 class RunAction;
 
@@ -49,7 +50,11 @@ class EventAction : public G4UserEventAction
     virtual void EndOfEventAction(const G4Event* event);
 
     void AddEdep(G4double edep) { fEdep += edep; }
-    G4int GetEventID() { return fEventID; }
+    
+    void FillVectorParticleID(G4int particleID)
+    { fParticleID.push_back(particleID); }
+    void FillVectorEdep(G4double edep)
+    { fStoredEdep.push_back(edep); }
 
   private:
     RunAction*             fRunAction;

@@ -52,11 +52,11 @@ class SteppingAction : public G4UserSteppingAction
     virtual void UserSteppingAction(const G4Step*);
 
  
-    std::vector<int> SteppingAction::GetVectorParticleID() 
-    { return fParticleID; }
+    //std::vector<int> SteppingAction::GetVectorParticleID() 
+    //{ return fParticleID; }
 
-    std::vector<double> SteppingAction::GetVectorEdep()
-    { return fStoredEdep; }
+    //std::vector<double> SteppingAction::GetVectorEdep()
+    //{ return fStoredEdep; }
 
   private:
     EventAction*         fEventAction;
@@ -66,9 +66,6 @@ class SteppingAction : public G4UserSteppingAction
     G4int            fPreviousTrackID; 
     G4int                fTrackID = 0;
     G4double           fLocalEdep = 0;
-    std::vector<int>      fParticleID;
-    std::vector<double>   fStoredEdep;
-
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

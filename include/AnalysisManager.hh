@@ -34,6 +34,7 @@
 #define AnalysisManager_h 1
 
 #include "globals.hh"
+#include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -54,14 +55,14 @@ class AnalysisManager
     void Initialise();
     void Save();
 
-    void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
-    void Normalize(G4int id, G4double fac);    
+    void FillHisto(G4int ih, G4double xvalue, G4double weight = 1.0);
 
     void FillTotalEdepNtuple(G4double totalEnergyAbs);
 
-    void FillParticleInfoNtuple(G4int eventID, G4int size,
-                                std::vector<int> particleID, 
-                                std::vector<double> edep);
+    void FillParticleInfoNtuple(G4int eventID);
+                                //, G4int size,
+                                //std::vector<int> particleID, 
+                                //std::vector<double> edep);
         
   private:
     TFile*                fRootFile;
@@ -69,6 +70,7 @@ class AnalysisManager
     TTree*                fTEdepNtuple;    
     TTree*                fParticleInfoNtuple;    
 
+    G4bool                fInitialised;
     G4double              fTEdep;
     G4int                 fEventID;
     G4int                 fSize;

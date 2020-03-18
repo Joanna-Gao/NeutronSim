@@ -44,9 +44,9 @@
 
 RunAction::RunAction(AnalysisManager* analysis)
 : G4UserRunAction(),
-  fAnalysisManager(analysis)
   fEdep(0.),
-  fEdep2(0.)
+  fEdep2(0.),
+  fAnalysisManager(analysis) 
 { 
   // add new units for dose
   // 

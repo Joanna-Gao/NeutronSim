@@ -46,9 +46,7 @@ SteppingAction::SteppingAction(EventAction* eventAction,
 : G4UserSteppingAction(),
   fEventAction(eventAction),
   fAnalysisManager(analysis),
-  fScoringVolume(0),
-  fParticleID(0),
-  fStoredEdep(0.)
+  fScoringVolume(0)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -97,7 +95,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   fParticleName = particle->GetParticleName();
 
-  G4int eventID = fEventAction->GetEventID();
   G4int particleID = particle->GetPDGEncoding();
 
   if (fTrackID != fPreviousTrackID && fPreviousTrackID != 0) {
@@ -115,10 +112,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     //
     
     // Store the particle IDs and the energy deposited in two 1D vectors
-    // Next step is to only store the ones we are interested
+    // Next step is to only store the ones we are interested, also store
+    // if the neutron is captured
     //
-    fParticleID.push_back(particleID);
-    fStoredEdep.push_back(fLocalEdep);
+    fEventAction->FillVectorParticleID(particleID);
+    fEventAction->FillVectorEdep(fLocalEdep);    
 
     fLocalEdep = 0;
   }

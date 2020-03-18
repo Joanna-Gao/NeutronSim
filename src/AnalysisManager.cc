@@ -58,6 +58,8 @@ AnalysisManager::AnalysisManager()
   fTEdepNtuple = 0;
   fParticleInfoNtuple = 0;
   fSize = 0;
+
+  fInitialised = false;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -77,7 +79,7 @@ void AnalysisManager::Initialise()
   G4String fileName = "ProtonAnalysis.root";
   fRootFile = new TFile(fileName,"RECREATE");
   if (! fRootFile) {
-    G4cout << " AnalysisManager::Book :" 
+    G4cout << " AnalysisManager::Initialise :" 
            << " problem creating the ROOT TFile "
            << G4endl;
     return;
@@ -99,10 +101,12 @@ void AnalysisManager::Initialise()
   fParticleInfoNtuple = new TTree("ParticleInfo", 
                         "Information about Particles that Reached the Water");
   fParticleInfoNtuple->Branch("EventID", &fEventID, "EventID/I"); 
-  fParticleInfoNtuple->Branch("ParticleID", fParticleID, "ParticleID[fSize]/I");
-  fParticleInfoNtuple->Branch("Edep", fEdep, "Edep[fSize]/D");
+  //fParticleInfoNtuple->Branch("ParticleID", fParticleID, "ParticleID[fSize]/I");
+  //fParticleInfoNtuple->Branch("Edep", fEdep, "Edep[fSize]/D");
  
   G4cout << "\n----> Output file is open in " << fileName << G4endl;
+
+  fInitialised = true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -111,56 +115,51 @@ void AnalysisManager::Save()
 { 
   if (! fRootFile) return;
   
-  fRootFile->Write();       // Writing the histograms to the file
-  fRootFile->Close();       // and closing the tree (and the file)
-  
-  G4cout << "\n----> Histograms and ntuples are saved\n" << G4endl;
+  if (fInitialised)
+  {
+    fRootFile->Write();       // Writing the histograms to the file   
+    fRootFile->Close();       // and closing the tree (and the file)  
+                                                                      
+    G4cout << "\n----> Histograms and ntuples are saved\n" << G4endl; 
+
+    fInitialised = false;
+  }  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void AnalysisManager::FillHisto(G4int ih=0, G4double xbin, G4double weight)
+void AnalysisManager::FillHisto(G4int ih, G4double xvalue, G4double weight)
 {
   if (ih >= kMaxHisto) {
     G4cerr << "---> warning from AnalysisManager::FillHisto() : histo " << ih
-           << " does not exist. (xbin=" << xbin << " weight=" << weight << ")"
+           << " does not exist. (xbin=" << xvalue << " weight=" << weight << ")"
            << G4endl;
     return;
   }
-  if  (fHisto[ih]) { fHisto[ih]->Fill(xbin, weight); }
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void AnalysisManager::Normalize(G4int ih=0, G4double fac)
-{
-  if (ih >= kMaxHisto) {
-    G4cout << "---> warning from AnalysisManager::Normalize() : histo " << ih
-           << " does not exist. (fac=" << fac << ")" << G4endl;
-    return;
-  }
-  if (fHisto[ih]) fHisto[ih]->Scale(fac);
+  if  (fHisto[ih]) { fHisto[ih]->Fill(xvalue, weight); }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void AnalysisManager::FillTotalEdepNtuple(G4double totalEnergyAbs)
 {
-  fEabs = totalEnergyAbs;
-  
-  if (fTEdepNtuple) fTEdepNtuple->Fill();
+  fTEdep = totalEnergyAbs;
+  G4cout << "Storing total energy deposition, value: " << fTEdep << G4endl;
+  //if (fTEdepNtuple) 
+  fTEdepNtuple->Fill();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void AnalysisManager::FillParticleInfoNtuple(G4int eventID, G4int size, 
-                                          std::vector<int> particleID,
-                                          std::vector<double> edep)
+void AnalysisManager::FillParticleInfoNtuple(G4int eventID)
+                                          //, G4int size, 
+                                          //std::vector<int> particleID,
+                                          //std::vector<double> edep)
 {                                                                                
   fEventID = eventID;
-  fSize = size;
-  fParticleID = particleID;
-  fEdep = edep;
+  //fSize = size;
+  //fParticleID = particleID;
+  //fEdep = edep;
 
   if (fParticleInfoNtuple) fParticleInfoNtuple->Fill();                          
 }                                                                                

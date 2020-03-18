@@ -33,16 +33,14 @@
 #include "RunAction.hh"
 #include "EventAction.hh"
 #include "SteppingAction.hh"
-#include "HistoManager.hh" 
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 ActionInitialization::ActionInitialization(AnalysisManager* analysis)
- : G4VUserActionInitialization()
-{
-  analysisManager = analysis;
-}
+: G4VUserActionInitialization(),
+  fAnalysisManager(analysis)
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -53,7 +51,7 @@ ActionInitialization::~ActionInitialization()
 
 void ActionInitialization::BuildForMaster() const
 {
-  RunAction* runAction = new RunAction(analysisManager);
+  RunAction* runAction = new RunAction(fAnalysisManager);
   SetUserAction(runAction);
 }
 
@@ -63,13 +61,13 @@ void ActionInitialization::Build() const
 {
   SetUserAction(new PrimaryGeneratorAction());
 
-  RunAction* runAction = new RunAction(analysisManager);
+  RunAction* runAction = new RunAction(fAnalysisManager);
   SetUserAction(runAction);
   
-  EventAction* eventAction = new EventAction(runAction, analysisManager);
+  EventAction* eventAction = new EventAction(runAction, fAnalysisManager);
   SetUserAction(eventAction);
   
-  SetUserAction(new SteppingAction(eventAction, analysisManager));
+  SetUserAction(new SteppingAction(eventAction, fAnalysisManager));
 }  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

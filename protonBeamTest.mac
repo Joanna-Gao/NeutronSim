@@ -18,4 +18,4 @@
 /gun/particle proton
 /gun/energy 1 TeV
 #
-/run/beamOn 100
+/run/beamOn 1

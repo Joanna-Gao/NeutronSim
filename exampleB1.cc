@@ -30,16 +30,14 @@
 #include "DetectorConstruction.hh"
 #include "ActionInitialization.hh"
 #include "AnalysisManager.hh"
-#include "HistoManager.hh"
 
-#ifdef G4MULTITHREADED
-#include "G4MTRunManager.hh"
-#else
+//#ifdef G4MULTITHREADED
+//#include "G4MTRunManager.hh"
+//#else
 #include "G4RunManager.hh"
-#endif
+//#endif
 
 #include "G4UImanager.hh"
-//#include "QBBC.hh"
 #include "FTFP_BERT.hh"
 
 #include "G4VisExecutive.hh"
@@ -63,15 +61,15 @@ int main(int argc,char** argv)
   
   // Construct the default run manager
   //
-#ifdef G4MULTITHREADED
-  G4MTRunManager* runManager = new G4MTRunManager;
-#else
+//#ifdef G4MULTITHREADED
+//  G4MTRunManager* runManager = new G4MTRunManager;
+//#else
   G4RunManager* runManager = new G4RunManager;
-#endif
+//#endif
   
   // Set mandatory initialization classes
   //
-  AnalysisManager* analysisManager = new AnalysisManager();
+  AnalysisManager* fAnalysisManager = new AnalysisManager();
   // Detector construction
   runManager->SetUserInitialization(new DetectorConstruction());
 
@@ -81,7 +79,7 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(physicsList);
     
   // User action initialization
-  runManager->SetUserInitialization(new ActionInitialization(analysisManager));
+  runManager->SetUserInitialization(new ActionInitialization(fAnalysisManager));
   
   // Initialize visualization
   //
@@ -114,7 +112,7 @@ int main(int argc,char** argv)
   // in the main() program !
   
   delete visManager;
-  delete analysisManager;
+  delete fAnalysisManager;
   delete runManager;
 }
 
