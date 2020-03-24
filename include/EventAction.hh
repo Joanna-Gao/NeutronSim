@@ -55,6 +55,8 @@ class EventAction : public G4UserEventAction
     { fParticleID.push_back(particleID); }
     void FillVectorEdep(G4double edep)
     { fStoredEdep.push_back(edep); }
+    void FillVectorTotalEnergy(G4double energy)
+    { fTotalEnergy.push_back(energy); }
 
   private:
     RunAction*             fRunAction;
@@ -63,6 +65,7 @@ class EventAction : public G4UserEventAction
     G4int                    fEventID;
     std::vector<G4int>    fParticleID; 
     std::vector<G4double> fStoredEdep;
+    std::vector<G4double> fTotalEnergy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

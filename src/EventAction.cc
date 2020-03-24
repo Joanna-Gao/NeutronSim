@@ -44,7 +44,8 @@ EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
   fEdep(0.),
   fEventID(0),
   fParticleID(0), 
-  fStoredEdep(0.) 
+  fStoredEdep(0.),
+  fTotalEnergy(0.)
 {} 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -76,27 +77,29 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
   //G4int size = 0, size1 = fParticleID.size(), size2 = fStoredEdep.size();
 
-  //if ( size1  ==  size2 ) size = size1;
-  //else
-  //  {
-  //    G4ExceptionDescription msg;                                
-  //    msg << "The sizes of the two vectors, ParticleID\n";        
-  //    msg << "and particleEdep, do not equal.\n";             
-  //    msg << "The size will default to the size of the\n";
-  //    msg << "longer one.\n";
-  //    G4Exception("EventAction::EndOfEventAction()", 
-  //     "MyCode0002",JustWarning,msg); 
-  //    
-  //    if ( size1 > size2 ) size = size1;
-  //    else size = size2;
-  //  }
+  if (fTotalEnergy.size() != fParticleID.size())
+  {
+    G4ExceptionDescription msg;                                
+    msg << "The size of the vector, TotalEnergy, does not\n";        
+    msg << "equal to the rest.\n";
+    msg << "Size of TotalEnergy: ";
+    msg << fTotalEnergy.size();
+    msg << "\nSize of ParticleID: ";
+    msg << fParticleID.size();
+    G4Exception("EventAction::EndOfEventAction()", 
+     "MyCode0002",JustWarning,msg); 
+  }
 
-  G4cout << "Event ID: " << fEventID << " finished." << G4endl;
+  G4cout << "Event ID " << fEventID << " finished." << G4endl;
 
-  fAnalysisManager->FillParticleInfoNtuple(fEventID, fParticleID, fStoredEdep);
+  fAnalysisManager->FillParticleInfoNtuple(fEventID, 
+                                           fParticleID, 
+                                           fStoredEdep, 
+                                           fTotalEnergy);
 
   fParticleID.clear();
   fStoredEdep.clear();
+  fTotalEnergy.clear();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

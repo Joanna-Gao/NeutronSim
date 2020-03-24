@@ -61,7 +61,8 @@ class AnalysisManager
 
     void FillParticleInfoNtuple(G4int eventID,
                                 std::vector<G4int> particleID, 
-                                std::vector<G4double> edep);
+                                std::vector<G4double> edep,
+                                std::vector<G4double> totalEnergy);
         
   private:
     TFile*                fRootFile;
@@ -72,9 +73,9 @@ class AnalysisManager
     G4bool                fInitialised;
     G4double              fTEdep;
     G4int                 fEventID;
-    G4int                 fSize;
     std::vector<G4int>    fParticleID;
     std::vector<G4double> fEdep;
+    std::vector<G4double> fTotalEnergy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

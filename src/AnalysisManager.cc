@@ -46,9 +46,9 @@ AnalysisManager::AnalysisManager()
   fParticleInfoNtuple(0), 
   fTEdep(0.),
   fEventID(0),
-  fSize(0),
   fParticleID(0),
-  fEdep(0.)
+  fEdep(0.),
+  fTotalEnergy(0.)
 {
       
   // histograms
@@ -57,7 +57,6 @@ AnalysisManager::AnalysisManager()
   // ntuple
   fTEdepNtuple = 0;
   fParticleInfoNtuple = 0;
-  fSize = 0;
 
   fInitialised = false;
 }
@@ -103,7 +102,8 @@ void AnalysisManager::Initialise()
   fParticleInfoNtuple->Branch("EventID", &fEventID, "EventID/I"); 
   fParticleInfoNtuple->Branch("ParticleID", &fParticleID);
   fParticleInfoNtuple->Branch("Edep", &fEdep);
- 
+  fParticleInfoNtuple->Branch("TotalEnergy", &fTotalEnergy); 
+
   G4cout << "\n----> Output file is open in " << fileName << G4endl;
 
   fInitialised = true;
@@ -152,11 +152,13 @@ void AnalysisManager::FillTotalEdepNtuple(G4double totalEnergyAbs)
 
 void AnalysisManager::FillParticleInfoNtuple(G4int eventID,
                                              std::vector<G4int> particleID,
-                                             std::vector<G4double> edep)
+                                             std::vector<G4double> edep,
+                                             std::vector<G4double> totalEnergy)
 {                                                                                
   fEventID = eventID;
   fParticleID = particleID;
   fEdep = edep;
+  fTotalEnergy = totalEnergy;
 
   if (fParticleInfoNtuple) fParticleInfoNtuple->Fill();                          
 }                                                                                

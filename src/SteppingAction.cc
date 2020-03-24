@@ -92,12 +92,32 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   G4int particleID = particle->GetPDGEncoding();
 
-  if (fTrackID != fPreviousTrackID && fPreviousTrackID != 0) {
+  G4double kinEnergy = dynParticle->GetKineticEnergy();
+
+  G4double totalEnergy = track->GetTotalEnergy();
+
+  // Extract neutron capture info
+  //const G4TrackStatus *trackStatus = track->GetTrackStatus();
+
+
+  if (fTrackID != fPreviousTrackID) {
+    //G4cout << "Track ID has changed from " 
+    //       << fPreviousTrackID 
+    //       << " to " 
+    //       << fTrackID 
+    //       << G4endl;
+    //
+    //G4cout << "Accumulated EnergyDeposit: " 
+    //       << fLocalEdep 
+    //       << " stored, initialising..." 
+    //       << G4endl;
+
+
     // Store the particle IDs and the energy deposited in two 1D vectors
     // Next step is to only store the ones we are interested, also store
     // if the neutron is captured
     //
-    if (particleID == 2122 || // proton
+    if (particleID == 2212 || // proton
         particleID == 2112 || // neutron
         particleID == 13   || particleID == -13 || // muon and anti-muon
         particleID == 12   || particleID == -12 || // electron/anti-electron nu
@@ -106,14 +126,39 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         particleID == 211  || particleID == -211|| // pi+/-
         particleID == 311  || // neutral kaon
         particleID == 321  || particleID == -321)  // K+/-
-    {
-      fEventAction->FillVectorParticleID(particleID); 
-      fEventAction->FillVectorEdep(fLocalEdep);       
-    }
+      {
+        fEventAction->FillVectorEdep(fLocalEdep);
+        fEventAction->FillVectorParticleID(particleID);   
+        fEventAction->FillVectorTotalEnergy(totalEnergy); 
+      }
+
+    G4String processName = step->GetPostStepPoint()->
+                                 GetProcessDefinedStep()->GetProcessName();
+    if (particleID == 2112 && processName == "nCapture")
+      G4cout << "Process name: "                                                   
+             << processName
+             << G4endl;                                                            
+    
 
     fLocalEdep = 0;
   }
-  else fLocalEdep += edepStep;
+  else {
+    
+    //G4cout << "Energy deposit in this step: " << edepStep << G4endl; 
+
+    fLocalEdep += edepStep;
+
+    //G4cout << "Accumulated energy deposit: " << fLocalEdep << G4endl;
+  }
+
+  //G4cout << fParticleName               
+  //       << " has total energy of "
+  //       << totalEnergy
+  //       << " and kinetic energy of "     
+  //       << (kinEnergy / CLHEP::MeV)   
+  //       << " MeV"                     
+  //       << G4endl;  
+
 
 }
 
