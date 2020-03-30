@@ -96,9 +96,34 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   G4double totalEnergy = track->GetTotalEnergy();
 
-  // Extract neutron capture info
-  //const G4TrackStatus *trackStatus = track->GetTrackStatus();
+  G4double globalTime = track->GetGlobalTime();
+  G4double localTime  = track->GetLocalTime();
 
+
+  //G4cout << "TrackID: "
+  //       << fTrackID
+  //       << ", ParticleID: "
+  //       << particleID
+  //       << ", Global time: " 
+  //       << globalTime 
+  //       << ", Local time: " 
+  //       << localTime 
+  //       << G4endl;
+ 
+
+  // Extract neutron capture info
+  G4TrackStatus trackStatus = track->GetTrackStatus();
+  G4String processName=step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+
+  if (fParticleName == "mu-" && processName == "Decay")
+    G4cout<<"Muon decayed!"<<G4endl;
+  
+  //G4cout << fParticleName
+  //       << " track status: "
+  //       << trackStatus
+  //       << ", process name: "
+  //       << processName
+  //       << G4endl;
 
   if (fTrackID != fPreviousTrackID) {
     //G4cout << "Track ID has changed from " 
@@ -119,26 +144,27 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     //
     if (particleID == 2212 || // proton
         particleID == 2112 || // neutron
-        particleID == 13   || particleID == -13 || // muon and anti-muon
-        particleID == 12   || particleID == -12 || // electron/anti-electron nu
-        particleID == 14   || particleID == -14 || // muon/anti-muon neutrino
+        particleID == 11   || particleID == -11 || // e-/e+
+        particleID == 12   || particleID == -12 || // nu_e/nu_e bar
+        particleID == 13   || particleID == -13 || // mu-/mu+
+        particleID == 14   || particleID == -14 || // nu_mu/nu_mu bar
+        particleID == 22   || // photons
         particleID == 111  || // neutral pion
         particleID == 211  || particleID == -211|| // pi+/-
-        particleID == 311  || // neutral kaon
         particleID == 321  || particleID == -321)  // K+/-
       {
         fEventAction->FillVectorEdep(fLocalEdep);
         fEventAction->FillVectorParticleID(particleID);   
         fEventAction->FillVectorTotalEnergy(totalEnergy); 
-      }
 
-    G4String processName = step->GetPostStepPoint()->
-                                 GetProcessDefinedStep()->GetProcessName();
-    if (particleID == 2112 && processName == "nCapture")
-      G4cout << "Process name: "                                                   
-             << processName
-             << G4endl;                                                            
-    
+        if (processName == "nCapture")            
+          fEventAction->FillVectorIsCaptured(1);  
+        else                                      
+          fEventAction->FillVectorIsCaptured(0);  
+          //G4cout << fParticleName               
+          //       << " captured!"                
+          //       << G4endl;
+      }
 
     fLocalEdep = 0;
   }
