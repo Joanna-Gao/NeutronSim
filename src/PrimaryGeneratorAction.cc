@@ -54,7 +54,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
   G4String particleName;
   G4ParticleDefinition* particle
-    = particleTable->FindParticle(particleName="proton");
+    = particleTable->FindParticle(particleName="mu-");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   fParticleGun->SetParticleEnergy(1.*TeV);
@@ -109,12 +109,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }
 
   G4double size = 0.8; 
-  G4double primaryParticleLocation = -1.025; // With respect to the length of 40m
+  G4double primaryParticleLocation = -1.; // With respect to the length of 20m
                                         // Proportionalities:
-                                        // 1m outside = 1.025 
-                                        // 10m outside = 1.25
-                                        // 20m outside = 1.50
-                                        // 30m outside = 1.75
+                                        // 1m outside = 1.05 
+                                        // 10m outside = 1.5
+                                        // 20m outside = 2.
+                                        // 30m outside = 2.5
+                                        // 50m outside = 3.5
+                                        // 100m outside = 6.
   G4double x0 = size * envRMax * std::sin(envPhi) * (G4UniformRand()-0.5);
   G4double y0 = size * envRMax * std::cos(envPhi) * (G4UniformRand()-0.5);
   G4double z0 = primaryParticleLocation * envZ;
