@@ -15,6 +15,10 @@ all: lib bin
 
 include $(G4INSTALL)/config/binmake.gmk
 
+# ROOT support
+CPPFLAGS += -I$(shell root-config --incdir)
+EXTRALIBS = $(shell root-config --glibs)
+
 visclean:
 	rm -f g4*.prim g4*.eps g4*.wrl
 	rm -f .DAWN_*

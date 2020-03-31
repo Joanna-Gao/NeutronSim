@@ -45,7 +45,7 @@ class ActionInitialization : public G4VUserActionInitialization
     virtual void Build() const;
 
   private:
-    AnalysisManager* analysisManager; 
+    AnalysisManager* fAnalysisManager; 
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

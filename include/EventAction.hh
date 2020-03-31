@@ -33,6 +33,7 @@
 #include "AnalysisManager.hh"
 #include "G4UserEventAction.hh"
 #include "globals.hh"
+#include <vector>
 
 class RunAction;
 
@@ -49,11 +50,25 @@ class EventAction : public G4UserEventAction
     virtual void EndOfEventAction(const G4Event* event);
 
     void AddEdep(G4double edep) { fEdep += edep; }
+    
+    void FillVectorParticleID(G4int particleID)
+    { fParticleID.push_back(particleID); }
+    void FillVectorEdep(G4double edep)
+    { fStoredEdep.push_back(edep); }
+    void FillVectorTotalEnergy(G4double energy)
+    { fTotalEnergy.push_back(energy); }
+    void FillVectorIsCaptured(G4int isCaptured)
+    { fIsCaptured.push_back(isCaptured); }
 
   private:
-    RunAction*            fRunAction;
-    G4double                   fEdep;
-    AnalysisManager* analysisManager;
+    RunAction*             fRunAction;
+    G4double                    fEdep;
+    AnalysisManager* fAnalysisManager;
+    G4int                    fEventID;
+    std::vector<G4int>    fParticleID; 
+    std::vector<G4double> fStoredEdep;
+    std::vector<G4double> fTotalEnergy;
+    std::vector<G4int>    fIsCaptured;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -45,7 +45,8 @@
 RunAction::RunAction(AnalysisManager* analysis)
 : G4UserRunAction(),
   fEdep(0.),
-  fEdep2(0.)
+  fEdep2(0.),
+  fAnalysisManager(analysis) 
 { 
   // add new units for dose
   // 
@@ -63,15 +64,6 @@ RunAction::RunAction(AnalysisManager* analysis)
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->RegisterAccumulable(fEdep);
   accumulableManager->RegisterAccumulable(fEdep2); 
-
-  // Create analysis manager
-  // The choice of analysis technology is done via selectin of a namespace
-  // in AnalysisManager.hh
-  analysisManager = analysis;
-  //G4cout << "Using " << analysisManager->GetType() << G4endl;
-
-  
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -87,7 +79,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
   // Get analysis manager
-  analysisManager->Initialise();
+  fAnalysisManager->Initialise();
 
   // reset accumulables to their initial values
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
@@ -163,7 +155,7 @@ void RunAction::EndOfRunAction(const G4Run* run)
 
   // save histograms & ntuple
   //
-  analysisManager->Finish();
+  fAnalysisManager->Save();
 
 }
 

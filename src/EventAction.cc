@@ -40,10 +40,14 @@
 EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
 : G4UserEventAction(),
   fRunAction(runAction),
-  fEdep(0.)
-{
-  analysisManager = analysis;
-} 
+  fEdep(0.),
+  fAnalysisManager(analysis),
+  fEventID(0),
+  fParticleID(0), 
+  fStoredEdep(0.),
+  fTotalEnergy(0.),
+  fIsCaptured(0)
+{} 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -59,17 +63,46 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void EventAction::EndOfEventAction(const G4Event*)
+void EventAction::EndOfEventAction(const G4Event* event)
 {   
   // accumulate statistics in run action
   fRunAction->AddEdep(fEdep); 
 
-  // fill histograms
-  //analysisManager->FillH1(1, fEdep);
-  analysisManager->FillTotalEdepHist(fEdep);
+  // Fill histograms
+  fAnalysisManager->FillHisto(0, fEdep);
 
-  // fill ntuple
-  analysisManager->StoreTotalEdep(fEdep);
+  // Fill ntuple
+  fAnalysisManager->FillTotalEdepNtuple(fEdep);
+
+  fEventID = event->GetEventID();
+
+  //G4int size = 0, size1 = fParticleID.size(), size2 = fStoredEdep.size();
+
+  if (fTotalEnergy.size() != fParticleID.size())
+  {
+    G4ExceptionDescription msg;                                
+    msg << "The size of the vector, TotalEnergy, does not\n";        
+    msg << "equal to the rest.\n";
+    msg << "Size of TotalEnergy: ";
+    msg << fTotalEnergy.size();
+    msg << "\nSize of ParticleID: ";
+    msg << fParticleID.size();
+    G4Exception("EventAction::EndOfEventAction()", 
+     "MyCode0002",JustWarning,msg); 
+  }
+
+  G4cout << "Event ID " << fEventID << " finished." << G4endl;
+
+  fAnalysisManager->FillParticleInfoNtuple(fEventID, 
+                                           fParticleID, 
+                                           fStoredEdep, 
+                                           fTotalEnergy,
+                                           fIsCaptured);
+
+  fParticleID.clear();
+  fStoredEdep.clear();
+  fTotalEnergy.clear();
+  fIsCaptured.clear();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

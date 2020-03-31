@@ -1,138 +1,171 @@
-#include <stdlib.h>
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+/// \file analysis/AnaEx02/src/HistoManager.cc
+/// \brief Implementation of the AnalysisManager class
+//
+// 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#include <TH1D.h>
+#include <TFile.h>
+#include <TTree.h>
+#include <CLHEP/Units/SystemOfUnits.h>
+
 #include "AnalysisManager.hh"
 #include "G4UnitsTable.hh"
-#include "G4SystemOfUnits.hh"
 
-AnalysisManager::AnalysisManager() 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+AnalysisManager::AnalysisManager()
+: fRootFile(0), 
+  fTEdepNtuple(0), 
+  fParticleInfoNtuple(0), 
+  fTEdep(0.),
+  fEventID(0),
+  fParticleID(0),
+  fEdep(0.),
+  fTotalEnergy(0.),
+  fIsCaptured(0)
 {
-  //factoryOn = false;
-
-  // Initialization
+      
   // histograms
-  //for (G4int k=0; k<MaxHisto; k++) fHistId[k] = 0;
+  for (G4int k=0; k<kMaxHisto; k++) fHisto[k] = 0;
+    
+  // ntuple
+  fTEdepNtuple = 0;
+  fParticleInfoNtuple = 0;
 
-  // Initialization ntuple
-  for (G4int k=0; k<MaxNtCol; k++) fNtColId[k] = 0;
+  fInitialised = false;
 }
 
-AnalysisManager::~AnalysisManager() 
-{}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void AnalysisManager::Initialise() 
+AnalysisManager::~AnalysisManager()
+{
+  if (fRootFile) delete fRootFile;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void AnalysisManager::Initialise()
 { 
-  auto manager = G4AnalysisManager::Instance();
-  
-  manager->SetVerboseLevel(0);
-  manager->SetNtupleMerging(true);
-
-  // Create directories  
-  manager->SetNtupleDirectoryName("ProtonAnalysis");
-  
-  G4String fileName = "MuonAnalysis";
-
-  G4bool fileOpen = manager->OpenFile(fileName);
-  if (!fileOpen) {
-    G4cout << "\n---> AnalysisManager::Initialise(): cannot open " 
-           << manager->GetFileName() 
+  // Creating a tree container to handle histograms and ntuples.
+  // This tree is associated to an output file.
+  //
+  G4String fileName = "ProtonAnalysis.root";
+  fRootFile = new TFile(fileName,"RECREATE");
+  if (! fRootFile) {
+    G4cout << " AnalysisManager::Initialise :" 
+           << " problem creating the ROOT TFile "
            << G4endl;
     return;
   }
-
-  //manager->SetFirstHistoId(1);
-  manager->SetFirstNtupleId(1);
-  //manager->SetNtupleMerging(true);
-
-  G4cout << "Creating Histogram" << G4endl;
-  manager->CreateH1("TotalEdep","Total Edep in water", 100, 0., 1*GeV);
-  G4cout << "Histogram Created" << G4endl;
-
-  // Create Total Energy Deposition Ntuple
-  InitialiseNtuple(0, "TEdep", "TotalEdep", "TotalEdep");
   
-  // Create Ntuple to store mu- energy when it first enter the tank
-  InitialiseNtuple(1, "muMinusKE", "Mu- Energy at the Concret/Water Threshold", 
-                   "muMinusKE");  
+  // id = 0
+  fHisto[0] = new TH1D("TotalEdep", "Total Energy Deposited in Water (GeV)",
+                        100, 0., 1000*CLHEP::GeV);
 
-  // Create Ntuple to store mu+ energy when it first enter the tank              
-  InitialiseNtuple(2, "muPlusKE", "Mu+ Energy at the Concret/Water Threshold",  
-                   "muPlusKE");                                                 
+  for ( G4int i=0; i<kMaxHisto; ++i ) {
+    if (! fHisto[i]) G4cout << "\n can't create histo " << i << G4endl;
+  }  
 
-  //Create Ntuple to store Energy Deposition of mu- in water                
-  InitialiseNtuple(3, "muMinusEdep", "Mu- Edep in Water", "muMinusEdep");
+  // create 1st ntuple
+  fTEdepNtuple = new TTree("TotalEdep", "Total Energy Deposited in Water");
+  fTEdepNtuple->Branch("TotalEdep", &fTEdep, "TotalEdep/D");
 
-  //Create Ntuple to store Energy Deposition of mu+ in water                 
-  InitialiseNtuple(4, "muPlusEdep", "Mu+ Edep in Water", "muPlusEdep");    
+  // create 2nd ntuple 
+  fParticleInfoNtuple = new TTree("ParticleInfo", 
+                        "Information about Particles that Reached the Water");
+  fParticleInfoNtuple->Branch("EventID", &fEventID, "EventID/I"); 
+  fParticleInfoNtuple->Branch("ParticleID", &fParticleID);
+  fParticleInfoNtuple->Branch("Edep", &fEdep);
+  fParticleInfoNtuple->Branch("TotalEnergy", &fTotalEnergy);
+  fParticleInfoNtuple->Branch("NeutronCapture", &fIsCaptured);
+
+  G4cout << "\n----> Output file is open in " << fileName << G4endl;
+
+  fInitialised = true;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void AnalysisManager::Save()
+{ 
+  if (! fRootFile) return;
   
-  //factoryOn = true;    
+  if (fInitialised)
+  {
+    fRootFile->Write();       // Writing the histograms to the file   
+    fRootFile->Close();       // and closing the tree (and the file)  
+                                                                      
+    G4cout << "\n----> Histograms and ntuples are saved\n" << G4endl; 
+
+    fInitialised = false;
+  }  
 }
 
-// Making ntuple creation easier
-void AnalysisManager::InitialiseNtuple(G4int index, G4String tupleName, 
-                                   G4String tupleTitle, G4String columnName)
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void AnalysisManager::FillHisto(G4int ih, G4double xvalue, G4double weight)
 {
-  auto manager = G4AnalysisManager::Instance();
-  manager->CreateNtuple(tupleName, tupleTitle);
-  fNtColId[index] = manager->CreateNtupleDColumn(columnName);
-  manager->FinishNtuple();
+  if (ih >= kMaxHisto) {
+    G4cerr << "---> warning from AnalysisManager::FillHisto() : histo " << ih
+           << " does not exist. (xbin=" << xvalue << " weight=" << weight << ")"
+           << G4endl;
+    return;
+  }
+  if  (fHisto[ih]) { fHisto[ih]->Fill(xvalue, weight); }
 }
 
-void AnalysisManager::FillTotalEdepHist(G4double edep)
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void AnalysisManager::FillTotalEdepNtuple(G4double totalEnergyAbs)
 {
-  auto manager = G4AnalysisManager::Instance();
-  manager->FillH1(0, edep);
+  fTEdep = totalEnergyAbs;
+ 
+  if (fTEdepNtuple) fTEdepNtuple->Fill();
 }
 
-void AnalysisManager::StoreTotalEdep(G4double edep)
-{
-  auto manager = G4AnalysisManager::Instance();
-  manager -> FillNtupleDColumn(1, fNtColId[0], edep);
-  manager -> AddNtupleRow(1); 
-}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void AnalysisManager::StoreMuMinusKE(G4double KE)
-{
-  auto manager = G4AnalysisManager::Instance();
-  manager -> FillNtupleDColumn(2, fNtColId[1], KE);
-  manager -> AddNtupleRow(2); 
-}
+void AnalysisManager::FillParticleInfoNtuple(G4int eventID,
+                                             std::vector<G4int> particleID,
+                                             std::vector<G4double> edep,
+                                             std::vector<G4double> totalEnergy,
+                                             std::vector<G4int> isCaptured)
+{                                                                                
+  fEventID = eventID;
+  fParticleID = particleID;
+  fEdep = edep;
+  fTotalEnergy = totalEnergy;
+  fIsCaptured = isCaptured;
 
-void AnalysisManager::StoreMuPlusKE(G4double KE)   
-{                                                   
-  auto manager = G4AnalysisManager::Instance();     
-  manager -> FillNtupleDColumn(3, fNtColId[2], KE); 
-  manager -> AddNtupleRow(3);                       
-}                                                   
+  if (fParticleInfoNtuple) fParticleInfoNtuple->Fill();                          
+}                                                                                
+                                                                                 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
 
-void AnalysisManager::StoreMuMinusEdep(G4double edep)        
-{                                                             
-  auto manager = G4AnalysisManager::Instance(); 
-  manager -> FillNtupleDColumn(4, fNtColId[3], edep);         
-  manager -> AddNtupleRow(4);                                 
-}                                                             
-
-void AnalysisManager::StoreMuPlusEdep(G4double edep)          
-{                                                              
-  auto manager = G4AnalysisManager::Instance();                
-  manager -> FillNtupleDColumn(5, fNtColId[4], edep);          
-  manager -> AddNtupleRow(5);                                  
-}                                                              
-
-
-void AnalysisManager::Finish() 
-{   
-  auto manager = G4AnalysisManager::Instance();     
-  manager -> Write();                                             
-  manager -> CloseFile();                                         
-                                                                  
-  delete G4AnalysisManager::Instance();                           
-
- //if (factoryOn) 
- //  {
- //   auto manager = G4AnalysisManager::Instance();    
- //   manager -> Write();
- //   manager -> CloseFile();  
- //     
- //   delete G4AnalysisManager::Instance();
- //   factoryOn = false;
- //  }
-}

@@ -30,7 +30,6 @@
 #include "SteppingAction.hh"
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
-#include "AnalysisManager.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -41,14 +40,11 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SteppingAction::SteppingAction(EventAction* eventAction,
-                               AnalysisManager* analysis)
+SteppingAction::SteppingAction(EventAction* eventAction)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
   fScoringVolume(0)
-{
-  analysisManager = analysis;
-}
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -76,54 +72,120 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
 
   // the following steps are to store individual particle Edep
-  previousTrackID = trackID;
+  fPreviousTrackID = fTrackID;
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
-  //G4cout << "GetTotalEnergyDeposit: " << edepStep << G4endl;
+
   fEventAction->AddEdep(edepStep); 
 
-  // attempt to extract particle name 
+  // Extract particleID as defined by PDG MC numbering scheme 
   G4Track *track = step->GetTrack();
   
-  trackID = track->GetTrackID();
+  fTrackID = track->GetTrackID();
 
   const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
 
   G4ParticleDefinition *particle = dynParticle->GetDefinition();
 
+  fParticleName = particle->GetParticleName();
+
+  G4int particleID = particle->GetPDGEncoding();
+
   G4double kinEnergy = dynParticle->GetKineticEnergy();
 
-  particleName = particle->GetParticleName();
+  G4double totalEnergy = track->GetTotalEnergy();
 
-  if (trackID != previousTrackID && previousTrackID != 0) {
-    //G4cout << "Track ID has changed from " << previousTrackID << " to " << trackID << G4endl;
-    //G4cout << "Accumulated EnergyDeposit: " << localEdep << " stored, initialising..." << G4endl;
+  G4double globalTime = track->GetGlobalTime();
+  G4double localTime  = track->GetLocalTime();
 
-    if (particleName == "mu-") analysisManager->StoreMuMinusKE(kinEnergy);  
-    if (particleName == "mu+") analysisManager->StoreMuPlusKE(kinEnergy);  
-    if (particleName == "mu-") analysisManager->StoreMuMinusEdep(localEdep); 
-    if (particleName == "mu+") analysisManager->StoreMuPlusEdep(localEdep);  
 
-    localEdep = 0;
+  //G4cout << "TrackID: "
+  //       << fTrackID
+  //       << ", ParticleID: "
+  //       << particleID
+  //       << ", Global time: " 
+  //       << globalTime 
+  //       << ", Local time: " 
+  //       << localTime 
+  //       << G4endl;
+ 
+
+  // Extract neutron capture info
+  G4TrackStatus trackStatus = track->GetTrackStatus();
+  G4String processName=step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+
+  if (fParticleName == "mu-" && processName == "Decay")
+    G4cout<<"Muon decayed!"<<G4endl;
+  
+  //G4cout << fParticleName
+  //       << " track status: "
+  //       << trackStatus
+  //       << ", process name: "
+  //       << processName
+  //       << G4endl;
+
+  if (fTrackID != fPreviousTrackID) {
+    //G4cout << "Track ID has changed from " 
+    //       << fPreviousTrackID 
+    //       << " to " 
+    //       << fTrackID 
+    //       << G4endl;
+    //
+    //G4cout << "Accumulated EnergyDeposit: " 
+    //       << fLocalEdep 
+    //       << " stored, initialising..." 
+    //       << G4endl;
+
+
+    // Store the particle IDs and the energy deposited in two 1D vectors
+    // Next step is to only store the ones we are interested, also store
+    // if the neutron is captured
+    //
+    if (particleID == 2212 || // proton
+        particleID == 2112 || // neutron
+        particleID == 11   || particleID == -11 || // e-/e+
+        particleID == 12   || particleID == -12 || // nu_e/nu_e bar
+        particleID == 13   || particleID == -13 || // mu-/mu+
+        particleID == 14   || particleID == -14 || // nu_mu/nu_mu bar
+        particleID == 22   || // photons
+        particleID == 111  || // neutral pion
+        particleID == 211  || particleID == -211|| // pi+/-
+        particleID == 321  || particleID == -321)  // K+/-
+      {
+        fEventAction->FillVectorEdep(fLocalEdep);
+        fEventAction->FillVectorParticleID(particleID);   
+        fEventAction->FillVectorTotalEnergy(totalEnergy); 
+
+        if (processName == "nCapture")            
+          fEventAction->FillVectorIsCaptured(1);  
+        else                                      
+          fEventAction->FillVectorIsCaptured(0);  
+          //G4cout << fParticleName               
+          //       << " captured!"                
+          //       << G4endl;
+      }
+
+    fLocalEdep = 0;
   }
   else {
     
-    localEdep += edepStep;
-   
-    //G4cout << "EnergyDeposit in this step: " << edepStep << G4endl;  
-    //G4cout << "Accumulated energy deposit: " << localEdep << G4endl; 
-   
+    //G4cout << "Energy deposit in this step: " << edepStep << G4endl; 
+
+    fLocalEdep += edepStep;
+
+    //G4cout << "Accumulated energy deposit: " << fLocalEdep << G4endl;
   }
-  
-  //G4cout << trackID << ". " 
-  //       << particleName 
-  //       << ": kinetic energy of " 
-  //       << (kinEnergy / CLHEP::MeV) 
-  //       << " MeV" 
-  //       << G4endl;
-  
-      
+
+  //G4cout << fParticleName               
+  //       << " has total energy of "
+  //       << totalEnergy
+  //       << " and kinetic energy of "     
+  //       << (kinEnergy / CLHEP::MeV)   
+  //       << " MeV"                     
+  //       << G4endl;  
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -1,98 +1,86 @@
-#ifndef ANALYSISMANAGER_HH
-#define ANALYSISMANAGER_HH 
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+/// \file analysis/AnaEx02/include/HistoManager.hh
+/// \brief Definition of the AnalysisManager class
+//
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#ifndef AnalysisManager_h
+#define AnalysisManager_h 1
 
 #include "globals.hh"
-#include "g4root.hh"
-//#include "g4csv.hh"
-//#include "g4xml.hh"
+#include <vector>
 
-// Define the total number of columns in the ntuple
-//const G4int MaxHisto = 10;
-const G4int MaxNtCol = 5;
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+class TFile;
+class TTree;
+class TH1D;
+
+const G4int kMaxHisto = 1;
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class AnalysisManager
-{ 
+{
+  public:
+    AnalysisManager();
+   ~AnalysisManager();
+   
+    void Initialise();
+    void Save();
 
-public:
-   AnalysisManager();
-  ~AnalysisManager();
-  
-  void Initialise(); // Creating the ROOT file
+    void FillHisto(G4int ih, G4double xvalue, G4double weight = 1.0);
 
-  void InitialiseNtuple(G4int index, G4String tupleName,
-                        G4String tupleTitle, G4String columnName);
+    void FillTotalEdepNtuple(G4double totalEnergyAbs);
 
-//  void NtupleMerging(G4bool canMerge);
+    void FillParticleInfoNtuple(G4int eventID,
+                                std::vector<G4int> particleID, 
+                                std::vector<G4double> edep,
+                                std::vector<G4double> totalEnergy,
+                                std::vector<G4int> isCaptured);
+        
+  private:
+    TFile*                fRootFile;
+    TH1D*                 fHisto[kMaxHisto];            
+    TTree*                fTEdepNtuple;    
+    TTree*                fParticleInfoNtuple;    
 
-  void FillTotalEdepHist(G4double edep);
-
-  void StoreTotalEdep(G4double edep);
-
-  void StoreMuMinusKE(G4double KE);
-
-  void StoreMuPlusKE(G4double KE);
-
-  void StoreMuMinusEdep(G4double edep);
-
-  void StoreMuPlusEdep(G4double edep);
-
-  void Finish();
-  // Close the ROOT file with all the results stored in nutples 
-
-private:
-  //G4bool    factoryOn; 
-  //G4int     fHistId[MaxHisto];
-  G4int     fNtColId[MaxNtCol];
-
+    G4bool                fInitialised;
+    G4double              fTEdep;
+    G4int                 fEventID;
+    std::vector<G4int>    fParticleID;
+    std::vector<G4double> fEdep;
+    std::vector<G4double> fTotalEnergy;
+    std::vector<G4int>    fIsCaptured;
 };
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

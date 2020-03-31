@@ -30,7 +30,6 @@
 #ifndef SteppingAction_h
 #define SteppingAction_h 1
 
-#include "AnalysisManager.hh"
 #include "G4UserSteppingAction.hh"
 #include "globals.hh"
 
@@ -44,21 +43,19 @@ class G4LogicalVolume;
 class SteppingAction : public G4UserSteppingAction
 {
   public:
-    SteppingAction(EventAction* eventAction,
-                   AnalysisManager* analysis);
+    SteppingAction(EventAction* eventAction);
     virtual ~SteppingAction();
 
     // method from the base class
     virtual void UserSteppingAction(const G4Step*);
 
-  private:
+   private:
     EventAction*         fEventAction;
-    AnalysisManager*  analysisManager;
     G4LogicalVolume*   fScoringVolume;
-    G4String             particleName;
-    G4int             previousTrackID; 
-    G4int                 trackID = 0;
-    G4double            localEdep = 0;
+    G4String            fParticleName;
+    G4int            fPreviousTrackID; 
+    G4int                fTrackID = 0;
+    G4double           fLocalEdep = 0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
