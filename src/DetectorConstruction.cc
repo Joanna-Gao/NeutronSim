@@ -45,7 +45,7 @@
 
 DetectorConstruction::DetectorConstruction()
 : G4VUserDetectorConstruction(),
-  fScoringVolume(0)
+  fPhysEnv(0)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -118,7 +118,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                env_rmax,                     //outer radius 
                env_height,                   //its height   
                angleMin,                     //start angle  
-               angleMax);                    //its height   
+               angleMax);                    //end angle   
 
       
   G4LogicalVolume* logicEnv =                         
@@ -126,19 +126,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         env_mat,             //its material
                         "Envelope");         //its name
                
-  new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(),         //at (0,0,0)
-                    logicEnv,                //its logical volume
-                    "Envelope",              //its name
-                    logicWorld,              //its mother  volume
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);          //overlaps checking
+  fPhysEnv = 
+    new G4PVPlacement(0,                       //no rotation
+                      G4ThreeVector(),         //at (0,0,0)
+                      logicEnv,                //its logical volume
+                      "Envelope",              //its name
+                      logicWorld,              //its mother  volume
+                      false,                   //no boolean operation
+                      0,                       //copy number
+                      checkOverlaps);          //overlaps checking
  
                 
   // Set the envelope as scoring volume
   //
-  fScoringVolume = logicEnv;
+  //fScoringVolume = physicalEnv;
 
   //
   //always return the physical World

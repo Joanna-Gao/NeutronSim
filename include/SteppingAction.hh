@@ -34,8 +34,8 @@
 #include "globals.hh"
 
 class EventAction;
-
-class G4LogicalVolume;
+class G4VPhysicalVolume; 
+class G4Tubs;
 
 /// Stepping action class
 /// 
@@ -51,7 +51,7 @@ class SteppingAction : public G4UserSteppingAction
 
    private:
     EventAction*         fEventAction;
-    G4LogicalVolume*   fScoringVolume;
+    G4VPhysicalVolume*       fPhysEnv;
     G4String            fParticleName;
     G4int            fPreviousTrackID; 
     G4int                fTrackID = 0;

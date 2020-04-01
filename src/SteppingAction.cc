@@ -36,6 +36,7 @@
 #include "G4Event.hh"
 #include "G4RunManager.hh"
 #include "G4LogicalVolume.hh"
+#include "G4PVPlacement.hh"
 #include "G4DynamicParticle.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -43,7 +44,7 @@
 SteppingAction::SteppingAction(EventAction* eventAction)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
-  fScoringVolume(0)
+  fPhysEnv(0)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -55,20 +56,18 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
-  if (!fScoringVolume) { 
+  if (!fPhysEnv) { 
     const DetectorConstruction* detectorConstruction
       = static_cast<const DetectorConstruction*>
         (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-    fScoringVolume = detectorConstruction->GetScoringVolume();   
+    fPhysEnv = detectorConstruction->GetPhysicalVolume();   
   }
 
   // get volume of the current step
-  G4LogicalVolume* volume 
-    = step->GetPreStepPoint()->GetTouchableHandle()
-      ->GetVolume()->GetLogicalVolume();
+  auto volume = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
       
   // check if we are in scoring volume
-  if (volume != fScoringVolume) return;
+  if (volume != fPhysEnv) return;
 
 
   // the following steps are to store individual particle Edep
@@ -90,8 +89,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4double kinEnergy = dynParticle->GetKineticEnergy();
   G4double totalEnergy = track->GetTotalEnergy();
 
-  G4double globalTime = track->GetGlobalTime();
-  G4double localTime  = track->GetLocalTime();
+  //G4double globalTime = track->GetGlobalTime();
+  //G4double localTime  = track->GetLocalTime();
 
 
   //G4cout << "TrackID: "
@@ -110,17 +109,24 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4String processName = step->GetPostStepPoint()
                              ->GetProcessDefinedStep()->GetProcessName();
 
-  if (fParticleName == "mu-" && processName == "Decay")
-    G4cout<<"Muon decayed!"<<G4endl;
+  // Record muon decays
+  //if (fParticleName == "mu-" && processName == "Decay")
+  //  G4cout<<"Muon decayed!"<<G4endl;
   
-  G4cout << fParticleName
-         << " track status: "
-         << trackStatus
-         << ", process name: "
-         << processName
-         << G4endl;
+  //G4cout << fParticleName
+  //       << " track status: "
+  //       << trackStatus
+  //       << ", process name: "
+  //       << processName
+  //       << G4endl;
+  
+  if (processName=="nCapture")
+  G4cout << fParticleName                
+         << " captured!"                 
+         << G4endl;                      
+         
 
-  if (fTrackID != fPreviousTrackID) {
+  if (trackStatus == fStopAndKill) {
     //G4cout << "Track ID has changed from " 
     //       << fPreviousTrackID 
     //       << " to " 

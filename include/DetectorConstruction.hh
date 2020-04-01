@@ -35,6 +35,7 @@
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
+class G4Tubs;
 
 /// Detector construction class to define materials and geometry.
 
@@ -46,10 +47,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     virtual G4VPhysicalVolume* Construct();
     
-    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
+    G4VPhysicalVolume* GetPhysicalVolume() const
+    { return fPhysEnv; }
 
   protected:
-    G4LogicalVolume*  fScoringVolume;
+    G4VPhysicalVolume*  fPhysEnv;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
