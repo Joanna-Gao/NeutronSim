@@ -76,24 +76,18 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
-
   fEventAction->AddEdep(edepStep); 
 
+  G4Track *track = step->GetTrack();   
+  fTrackID = track->GetTrackID();      
+
   // Extract particleID as defined by PDG MC numbering scheme 
-  G4Track *track = step->GetTrack();
-  
-  fTrackID = track->GetTrackID();
-
   const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
-
   G4ParticleDefinition *particle = dynParticle->GetDefinition();
-
   fParticleName = particle->GetParticleName();
-
   G4int particleID = particle->GetPDGEncoding();
 
   G4double kinEnergy = dynParticle->GetKineticEnergy();
-
   G4double totalEnergy = track->GetTotalEnergy();
 
   G4double globalTime = track->GetGlobalTime();
@@ -113,17 +107,18 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // Extract neutron capture info
   G4TrackStatus trackStatus = track->GetTrackStatus();
-  G4String processName=step->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+  G4String processName = step->GetPostStepPoint()
+                             ->GetProcessDefinedStep()->GetProcessName();
 
   if (fParticleName == "mu-" && processName == "Decay")
     G4cout<<"Muon decayed!"<<G4endl;
   
-  //G4cout << fParticleName
-  //       << " track status: "
-  //       << trackStatus
-  //       << ", process name: "
-  //       << processName
-  //       << G4endl;
+  G4cout << fParticleName
+         << " track status: "
+         << trackStatus
+         << ", process name: "
+         << processName
+         << G4endl;
 
   if (fTrackID != fPreviousTrackID) {
     //G4cout << "Track ID has changed from " 
