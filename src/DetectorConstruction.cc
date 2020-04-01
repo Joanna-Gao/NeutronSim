@@ -137,10 +137,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                       checkOverlaps);          //overlaps checking
  
                 
-  // Set the envelope as scoring volume
-  //
-  //fScoringVolume = physicalEnv;
-
   //
   //always return the physical World
   //

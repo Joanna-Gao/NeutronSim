@@ -69,7 +69,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   // check if we are in scoring volume
   if (volume != fPhysEnv) return;
 
-
   // the following steps are to store individual particle Edep
   fPreviousTrackID = fTrackID;
 
@@ -120,10 +119,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //       << processName
   //       << G4endl;
   
-  if (processName=="nCapture")
-  G4cout << fParticleName                
-         << " captured!"                 
-         << G4endl;                      
+  //if (processName=="nCapture")
+  //G4cout << fParticleName                
+  //       << " captured!"                 
+  //       << G4endl;                      
          
 
   if (trackStatus == fStopAndKill) {
