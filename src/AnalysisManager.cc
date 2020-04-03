@@ -49,7 +49,8 @@ AnalysisManager::AnalysisManager()
   fParticleID(0),
   fEdep(0.),
   fTotalEnergy(0.),
-  fIsCaptured(0)
+  fIsCaptured(0),
+  fEntryEnergy(0.)
 {
       
   // histograms
@@ -105,6 +106,7 @@ void AnalysisManager::Initialise()
   fParticleInfoNtuple->Branch("Edep", &fEdep);
   fParticleInfoNtuple->Branch("TotalEnergy", &fTotalEnergy);
   fParticleInfoNtuple->Branch("NeutronCapture", &fIsCaptured);
+  fParticleInfoNtuple->Branch("EntryEnergy", &fEntryEnergy, "EntryEnergy/D"); 
 
   G4cout << "\n----> Output file is open in " << fileName << G4endl;
 
@@ -156,13 +158,15 @@ void AnalysisManager::FillParticleInfoNtuple(G4int eventID,
                                              std::vector<G4int> particleID,
                                              std::vector<G4double> edep,
                                              std::vector<G4double> totalEnergy,
-                                             std::vector<G4int> isCaptured)
+                                             std::vector<G4int> isCaptured,
+                                             G4double entryEnergy)
 {                                                                                
   fEventID = eventID;
   fParticleID = particleID;
   fEdep = edep;
   fTotalEnergy = totalEnergy;
   fIsCaptured = isCaptured;
+  fEntryEnergy = entryEnergy;
 
   if (fParticleInfoNtuple) fParticleInfoNtuple->Fill();                          
 }                                                                                

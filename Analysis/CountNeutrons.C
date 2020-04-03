@@ -12,7 +12,7 @@
   can->Clear();                                                      
 
   TProfile * hprof = new TProfile("hprof",
-                                  "Profile of No. of Neutrons Deposited Energy in Water",
+                                  "No. of Neutrons Deposited Energy in Water",
                                    100,-1, 101,0,1000000);
 
   for (int x=0; x<fileNumber; ++x)
@@ -24,7 +24,8 @@
     //string fname;                              
     //cout << "Please input a ROOT file which you need to display:" << endl;
     //cin >> fname;       //Input a ROOT file       
-    string fname =  "~/Documents/PhD/Geant4_Projects/ProtonAnalysis-build/HPRootFiles/1000Events1TeVMu"+std::to_string((int)distance)+"m.root";
+    string fname =
+        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events1TeVmu"+std::to_string((int)distance)+"m.root";
     auto file = TFile::Open(fname.c_str());
                                           
     cout << "Plotting " << fname << endl;
@@ -64,12 +65,7 @@
                                                
   //can->SetLogx();                            
                                                
-  //string imageName;                            
-  //cout << "Please input a name which you like to save your image as:" << endl;
-  //cin >> imageName;       //Input a name for the saved file
-  //can->SaveAs(imageName.c_str());                          
-
-  can->SaveAs("NumberOfNeutron.pdf");
+  can->SaveAs("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/NumberOfNeutron.pdf");
 
 
 

@@ -123,9 +123,17 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //G4cout << fParticleName                
   //       << " captured!"                 
   //       << G4endl;                      
-         
+  
+  // Store the true energy of the source when it enters the water
+  //
+  if (fParticleName == fEventAction->GetSourceParticle() && 
+      processName == "Transportation" )
+    fEventAction->SetEntryEnergy(totalEnergy);
 
-  if (trackStatus == fStopAndKill) {
+
+  // Store information about certain particles once its track has ended
+  //
+  if (trackStatus == fStopAndKill || processName == "Transportation") {
     //G4cout << "Track ID has changed from " 
     //       << fPreviousTrackID 
     //       << " to " 

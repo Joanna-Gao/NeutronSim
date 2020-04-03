@@ -36,6 +36,7 @@
 #include <vector>
 
 class RunAction;
+class PrimaryGeneratorAction;
 
 /// Event action class
 ///
@@ -59,16 +60,22 @@ class EventAction : public G4UserEventAction
     { fTotalEnergy.push_back(energy); }
     void FillVectorIsCaptured(G4int isCaptured)
     { fIsCaptured.push_back(isCaptured); }
+    void SetEntryEnergy(G4double entryEnergy)
+    { fEntryEnergy = entryEnergy; }
+    G4String GetSourceParticle()
+    { return fSourceParticle; }
 
   private:
     RunAction*             fRunAction;
     G4double                    fEdep;
     AnalysisManager* fAnalysisManager;
+    G4String          fSourceParticle;
     G4int                    fEventID;
     std::vector<G4int>    fParticleID; 
     std::vector<G4double> fStoredEdep;
     std::vector<G4double> fTotalEnergy;
     std::vector<G4int>    fIsCaptured;
+    G4double             fEntryEnergy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

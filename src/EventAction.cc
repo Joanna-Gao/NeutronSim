@@ -30,6 +30,7 @@
 #include "EventAction.hh"
 #include "RunAction.hh"
 #include "AnalysisManager.hh"
+#include "PrimaryGeneratorAction.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -42,12 +43,21 @@ EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
   fRunAction(runAction),
   fEdep(0.),
   fAnalysisManager(analysis),
+  fSourceParticle(""),
   fEventID(0),
   fParticleID(0), 
   fStoredEdep(0.),
   fTotalEnergy(0.),
-  fIsCaptured(0)
-{} 
+  fIsCaptured(0),
+  fEntryEnergy(0.)
+{
+  const PrimaryGeneratorAction* generatorAction                       
+   = static_cast<const PrimaryGeneratorAction*>                       
+     (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
+  fSourceParticle = generatorAction->GetParticleGun()
+                                    ->GetParticleDefinition()
+                                    ->GetParticleName();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -76,8 +86,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
   fEventID = event->GetEventID();
 
-  //G4int size = 0, size1 = fParticleID.size(), size2 = fStoredEdep.size();
-
   if (fTotalEnergy.size() != fParticleID.size())
   {
     G4ExceptionDescription msg;                                
@@ -97,7 +105,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
                                            fParticleID, 
                                            fStoredEdep, 
                                            fTotalEnergy,
-                                           fIsCaptured);
+                                           fIsCaptured,
+                                           fEntryEnergy);
 
   fParticleID.clear();
   fStoredEdep.clear();

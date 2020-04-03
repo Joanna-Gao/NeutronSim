@@ -63,7 +63,8 @@ class AnalysisManager
                                 std::vector<G4int> particleID, 
                                 std::vector<G4double> edep,
                                 std::vector<G4double> totalEnergy,
-                                std::vector<G4int> isCaptured);
+                                std::vector<G4int> isCaptured,
+                                G4double entryEnergy);
         
   private:
     TFile*                fRootFile;
@@ -78,6 +79,7 @@ class AnalysisManager
     std::vector<G4double> fEdep;
     std::vector<G4double> fTotalEnergy;
     std::vector<G4int>    fIsCaptured;
+    G4double              fEntryEnergy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
