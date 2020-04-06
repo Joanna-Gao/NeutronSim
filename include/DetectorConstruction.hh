@@ -47,11 +47,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     virtual G4VPhysicalVolume* Construct();
     
-    G4VPhysicalVolume* GetPhysicalVolume() const
-    { return fPhysEnv; }
+    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 
   protected:
-    G4VPhysicalVolume*  fPhysEnv;
+    G4LogicalVolume*    fScoringVolume;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

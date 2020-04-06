@@ -46,7 +46,6 @@ EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
   fSourceParticle(""),
   fEventID(0),
   fParticleID(0), 
-  fStoredEdep(0.),
   fTotalEnergy(0.),
   fIsCaptured(0),
   fEntryEnergy(0.)
@@ -103,13 +102,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
   fAnalysisManager->FillParticleInfoNtuple(fEventID, 
                                            fParticleID, 
-                                           fStoredEdep, 
                                            fTotalEnergy,
                                            fIsCaptured,
                                            fEntryEnergy);
 
   fParticleID.clear();
-  fStoredEdep.clear();
   fTotalEnergy.clear();
   fIsCaptured.clear();
 }

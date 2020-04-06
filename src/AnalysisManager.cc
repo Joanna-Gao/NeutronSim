@@ -47,7 +47,6 @@ AnalysisManager::AnalysisManager()
   fTEdep(0.),
   fEventID(0),
   fParticleID(0),
-  fEdep(0.),
   fTotalEnergy(0.),
   fIsCaptured(0),
   fEntryEnergy(0.)
@@ -103,7 +102,6 @@ void AnalysisManager::Initialise()
                         "Information about Particles that Reached the Water");
   fParticleInfoNtuple->Branch("EventID", &fEventID, "EventID/I"); 
   fParticleInfoNtuple->Branch("ParticleID", &fParticleID);
-  fParticleInfoNtuple->Branch("Edep", &fEdep);
   fParticleInfoNtuple->Branch("TotalEnergy", &fTotalEnergy);
   fParticleInfoNtuple->Branch("NeutronCapture", &fIsCaptured);
   fParticleInfoNtuple->Branch("EntryEnergy", &fEntryEnergy, "EntryEnergy/D"); 
@@ -156,14 +154,12 @@ void AnalysisManager::FillTotalEdepNtuple(G4double totalEnergyAbs)
 
 void AnalysisManager::FillParticleInfoNtuple(G4int eventID,
                                              std::vector<G4int> particleID,
-                                             std::vector<G4double> edep,
                                              std::vector<G4double> totalEnergy,
                                              std::vector<G4int> isCaptured,
                                              G4double entryEnergy)
 {                                                                                
   fEventID = eventID;
   fParticleID = particleID;
-  fEdep = edep;
   fTotalEnergy = totalEnergy;
   fIsCaptured = isCaptured;
   fEntryEnergy = entryEnergy;

@@ -44,7 +44,8 @@
 SteppingAction::SteppingAction(EventAction* eventAction)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
-  fPhysEnv(0)
+  fScoringVolume(0),
+  fParticleName("")
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -56,28 +57,26 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
-  if (!fPhysEnv) { 
+  if (!fScoringVolume) { 
     const DetectorConstruction* detectorConstruction
       = static_cast<const DetectorConstruction*>
         (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-    fPhysEnv = detectorConstruction->GetPhysicalVolume();   
+    fScoringVolume = detectorConstruction->GetScoringVolume();   
   }
 
   // get volume of the current step
-  auto volume = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
+  G4LogicalVolume* volume 
+    = step->GetPreStepPoint()->GetTouchableHandle()
+      ->GetVolume()->GetLogicalVolume();
       
   // check if we are in scoring volume
-  if (volume != fPhysEnv) return;
-
-  // the following steps are to store individual particle Edep
-  fPreviousTrackID = fTrackID;
+  if (volume != fScoringVolume) return;
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
   fEventAction->AddEdep(edepStep); 
 
   G4Track *track = step->GetTrack();   
-  fTrackID = track->GetTrackID();      
 
   // Extract particleID as defined by PDG MC numbering scheme 
   const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
@@ -92,9 +91,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //G4double localTime  = track->GetLocalTime();
 
 
-  //G4cout << "TrackID: "
-  //       << fTrackID
-  //       << ", ParticleID: "
+  //G4cout << "ParticleID: "
   //       << particleID
   //       << ", Global time: " 
   //       << globalTime 
@@ -118,12 +115,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //       << ", process name: "
   //       << processName
   //       << G4endl;
-  
-  //if (processName=="nCapture")
-  //G4cout << fParticleName                
-  //       << " captured!"                 
-  //       << G4endl;                      
-  
+    
   // Store the true energy of the source when it enters the water
   //
   if (fParticleName == fEventAction->GetSourceParticle() && 
@@ -134,12 +126,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   // Store information about certain particles once its track has ended
   //
   if (trackStatus == fStopAndKill || processName == "Transportation") {
-    //G4cout << "Track ID has changed from " 
-    //       << fPreviousTrackID 
-    //       << " to " 
-    //       << fTrackID 
-    //       << G4endl;
-    //
     //G4cout << "Accumulated EnergyDeposit: " 
     //       << fLocalEdep 
     //       << " stored, initialising..." 
@@ -161,9 +147,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         particleID == 211  || particleID == -211|| // pi+/-
         particleID == 321  || particleID == -321)  // K+/-
       {
-        fEventAction->FillVectorEdep(fLocalEdep);
-        fEventAction->FillVectorParticleID(particleID);   
-        fEventAction->FillVectorTotalEnergy(totalEnergy); 
+        //fEventAction->FillVectorParticleID(particleID);   
+        //fEventAction->FillVectorTotalEnergy(totalEnergy); 
 
         if (processName == "nCapture")            
           fEventAction->FillVectorIsCaptured(1);  
@@ -173,17 +158,15 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
           //       << " captured!"                
           //       << G4endl;
       }
-
-    fLocalEdep = 0;
   }
-  else {
+
     
-    //G4cout << "Energy deposit in this step: " << edepStep << G4endl; 
 
-    fLocalEdep += edepStep;
 
-    //G4cout << "Accumulated energy deposit: " << fLocalEdep << G4endl;
-  }
+
+
+
+
 
   //G4cout << fParticleName               
   //       << " has total energy of "

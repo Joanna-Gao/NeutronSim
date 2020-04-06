@@ -23,64 +23,38 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file analysis/AnaEx02/include/HistoManager.hh
-/// \brief Definition of the AnalysisManager class
 //
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+/// \file TrackingAction.hh
+/// \brief Definition of the TrackingAction class
 
-#ifndef AnalysisManager_h
-#define AnalysisManager_h 1
+#ifndef TrackingAction_h
+#define TrackingAction_h 1
 
+#include "G4UserTrackingAction.hh"
 #include "globals.hh"
-#include <vector>
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+class EventAction;
+class G4LogicalVolume;
 
-class TFile;
-class TTree;
-class TH1D;
+/// Tracking action class
+/// 
 
-const G4int kMaxHisto = 1;
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-class AnalysisManager
+class TrackingAction : public G4UserTrackingAction
 {
   public:
-    AnalysisManager();
-   ~AnalysisManager();
-   
-    void Initialise();
-    void Save();
+    TrackingAction(EventAction* eventAction);
+    virtual ~TrackingAction();
 
-    void FillHisto(G4int ih, G4double xvalue, G4double weight = 1.0);
+    // method from the base class
+    virtual void PreUserTrackingAction (const G4Track *);
+    virtual void PostUserTrackingAction(const G4Track *);
 
-    void FillTotalEdepNtuple(G4double totalEnergyAbs);
-
-    void FillParticleInfoNtuple(G4int eventID,
-                                std::vector<G4int> particleID, 
-                                std::vector<G4double> totalEnergy,
-                                std::vector<G4int> isCaptured,
-                                G4double entryEnergy);
-        
-  private:
-    TFile*                fRootFile;
-    TH1D*                 fHisto[kMaxHisto];            
-    TTree*                fTEdepNtuple;    
-    TTree*                fParticleInfoNtuple;    
-
-    G4bool                fInitialised;
-    G4double              fTEdep;
-    G4int                 fEventID;
-    std::vector<G4int>    fParticleID;
-    std::vector<G4double> fTotalEnergy;
-    std::vector<G4int>    fIsCaptured;
-    G4double              fEntryEnergy;
+   private:
+    EventAction*         fEventAction;
+    G4String            fParticleName;
+    G4int                 fParticleID;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

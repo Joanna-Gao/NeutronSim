@@ -54,8 +54,6 @@ class EventAction : public G4UserEventAction
     
     void FillVectorParticleID(G4int particleID)
     { fParticleID.push_back(particleID); }
-    void FillVectorEdep(G4double edep)
-    { fStoredEdep.push_back(edep); }
     void FillVectorTotalEnergy(G4double energy)
     { fTotalEnergy.push_back(energy); }
     void FillVectorIsCaptured(G4int isCaptured)
@@ -72,7 +70,6 @@ class EventAction : public G4UserEventAction
     G4String          fSourceParticle;
     G4int                    fEventID;
     std::vector<G4int>    fParticleID; 
-    std::vector<G4double> fStoredEdep;
     std::vector<G4double> fTotalEnergy;
     std::vector<G4int>    fIsCaptured;
     G4double             fEntryEnergy;
