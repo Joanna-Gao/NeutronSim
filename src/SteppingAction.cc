@@ -56,7 +56,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
-  if (!fPhysEnv) { 
+  if (!fPhysEnv) {
     const DetectorConstruction* detectorConstruction
       = static_cast<const DetectorConstruction*>
         (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
@@ -89,7 +89,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4double totalEnergy = track->GetTotalEnergy();
 
   //G4double globalTime = track->GetGlobalTime();
-  //G4double localTime  = track->GetLocalTime();
+  G4double localTime = step->GetPreStepPoint()->GetLocalTime();
+  //G4double localTime = track->GetLocalTime();
 
 
   //G4cout << "TrackID: "
@@ -117,12 +118,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //       << trackStatus
   //       << ", process name: "
   //       << processName
+  //       << ", local time: "
+  //       << localTime
   //       << G4endl;
-  
-  //if (processName=="nCapture")
-  //G4cout << fParticleName                
-  //       << " captured!"                 
-  //       << G4endl;                      
   
   // Store the true energy of the source when it enters the water
   //
@@ -130,6 +128,25 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       processName == "Transportation" )
     fEventAction->SetEntryEnergy(totalEnergy);
 
+
+
+  if (localTime == 0)
+  {
+
+    if (particleID == 2212 || // proton                               
+        particleID == 2112 || // neutron                              
+        particleID == 11   || particleID == -11 || // e-/e+           
+        particleID == 12   || particleID == -12 || // nu_e/nu_e bar   
+        particleID == 13   || particleID == -13 || // mu-/mu+         
+        particleID == 14   || particleID == -14 || // nu_mu/nu_mu bar 
+        particleID == 22   || // photon
+        particleID == 111  || // neutral pion
+        particleID == 211  || particleID == -211|| // pi+/-           
+        particleID == 321  || particleID == -321)  // K+/-            
+    {
+      fEventAction->FillVectorTotalEnergy(totalEnergy);
+    }
+  }
 
   // Store information about certain particles once its track has ended
   //
@@ -163,7 +180,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       {
         fEventAction->FillVectorEdep(fLocalEdep);
         fEventAction->FillVectorParticleID(particleID);   
-        fEventAction->FillVectorTotalEnergy(totalEnergy); 
 
         if (processName == "nCapture")            
           fEventAction->FillVectorIsCaptured(1);  
