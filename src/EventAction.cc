@@ -85,15 +85,15 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
   fEventID = event->GetEventID();
 
-  if (fTotalEnergy.size() != fParticleID.size())
+  if (fTotalEnergy.size() != fIsCaptured.size())
   {
     G4ExceptionDescription msg;                                
     msg << "The size of the vector, TotalEnergy, does not\n";        
     msg << "equal to the rest.\n";
     msg << "Size of TotalEnergy: ";
     msg << fTotalEnergy.size();
-    msg << "\nSize of ParticleID: ";
-    msg << fParticleID.size();
+    msg << "\nSize of NeutronCapture: ";
+    msg << fIsCaptured.size();
     G4Exception("EventAction::EndOfEventAction()", 
      "MyCode0002",JustWarning,msg); 
   }

@@ -13,27 +13,10 @@
 TrackingAction::TrackingAction(EventAction * eventAction)
 : G4UserTrackingAction(),
   fEventAction(eventAction),
+  fScoringVolume(0),
   fParticleName(""),
   fParticleID(0)
-{
-  //if (!fScoringVolume) {                                                
-  //  const DetectorConstruction* detectorConstruction                    
-  //    = static_cast<const DetectorConstruction*>                        
-  //      (G4RunManager::GetRunManager()->GetUserDetectorConstruction()); 
-  //  fScoringVolume = detectorConstruction->GetScoringVolume();          
-  //}                                                                     
-  //                                                                      
-  //// get volume of the current step                                     
-  //G4LogicalVolume* volume                                               
-  //  = step->GetPreStepPoint()->GetTouchableHandle()                     
-  //    ->GetVolume()->GetLogicalVolume();                                
-
-  //// check if we are in scoring volume                                  
-  //G4Step * step = track->GetStep();
-  //G4String processName = step->GetPostStepPoint()                         
-  //                           ->GetProcessDefinedStep()->GetProcessName(); 
-  //if (volume != fScoringVolume) return;
-}
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
 
@@ -44,16 +27,34 @@ TrackingAction::~TrackingAction()
 
 void TrackingAction::PreUserTrackingAction(const G4Track * track)
 {
+  //if (!fScoringVolume) {
+  //  const DetectorConstruction* detectorConstruction
+  //    = static_cast<const DetectorConstruction*>
+  //      (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+  //  fScoringVolume = detectorConstruction->GetScoringVolume();
+  //}                                                
+  //
+  //// get volume of the current step
+  //const G4Step * step = track->GetStep(); 
+  //G4LogicalVolume* volume
+  //  = step->GetPreStepPoint()->GetTouchableHandle()
+  //    ->GetVolume()->GetLogicalVolume();           
+  //                                                 
+  //// check if we are in scoring volume             
+  ////G4String processName = step->GetPostStepPoint()  
+  ////                           ->GetProcessDefinedStep()->GetProcessName() 
+  //if (volume != fScoringVolume) return;
+
   // Record particle ID and its total energy at the start of the track
   //
   // Extract particleID as defined by PDG MC numbering scheme             
-  const G4DynamicParticle *dynParticle = track->GetDynamicParticle();     
-  G4ParticleDefinition *particle = dynParticle->GetDefinition();          
-  fParticleName = particle->GetParticleName();                            
-  fParticleID = particle->GetPDGEncoding();                               
+  const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
+  G4ParticleDefinition *particle = dynParticle->GetDefinition();
+  fParticleName = particle->GetParticleName();
+  fParticleID = particle->GetPDGEncoding();
 
   // Extract decay time
-  G4double globalTime = track->GetGlobalTime();
+  //G4double globalTime = track->GetGlobalTime();
   G4double localTime = track->GetLocalTime();
 
   G4double totalEnergy = track->GetTotalEnergy(); 

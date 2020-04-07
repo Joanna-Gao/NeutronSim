@@ -51,6 +51,7 @@ class TrackingAction : public G4UserTrackingAction
 
    private:
     EventAction*         fEventAction;
+    G4LogicalVolume*   fScoringVolume;
     G4String            fParticleName;
     G4int                 fParticleID;
 };
