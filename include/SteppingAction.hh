@@ -53,7 +53,6 @@ class SteppingAction : public G4UserSteppingAction
     EventAction*         fEventAction;
     G4LogicalVolume*   fScoringVolume;
     G4String            fParticleName;
-    G4double           fLocalEdep = 0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

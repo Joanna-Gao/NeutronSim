@@ -35,6 +35,8 @@
 
 class EventAction;
 class G4LogicalVolume;
+class G4VPhysicalVolume;
+class DetectorConstruction;
 
 /// Tracking action class
 /// 
@@ -51,7 +53,7 @@ class TrackingAction : public G4UserTrackingAction
 
    private:
     EventAction*         fEventAction;
-    G4LogicalVolume*   fScoringVolume;
+    G4VPhysicalVolume*    fPhysVolume;
     G4String            fParticleName;
     G4int                 fParticleID;
 };

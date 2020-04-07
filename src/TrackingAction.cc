@@ -9,11 +9,12 @@
 #include "G4DynamicParticle.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
+#include "G4VPhysicalVolume.hh"
 
 TrackingAction::TrackingAction(EventAction * eventAction)
 : G4UserTrackingAction(),
   fEventAction(eventAction),
-  fScoringVolume(0),
+  fPhysVolume(0),
   fParticleName(""),
   fParticleID(0)
 {}
@@ -27,23 +28,18 @@ TrackingAction::~TrackingAction()
 
 void TrackingAction::PreUserTrackingAction(const G4Track * track)
 {
-  //if (!fScoringVolume) {
-  //  const DetectorConstruction* detectorConstruction
-  //    = static_cast<const DetectorConstruction*>
-  //      (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-  //  fScoringVolume = detectorConstruction->GetScoringVolume();
-  //}                                                
-  //
-  //// get volume of the current step
-  //const G4Step * step = track->GetStep(); 
-  //G4LogicalVolume* volume
-  //  = step->GetPreStepPoint()->GetTouchableHandle()
-  //    ->GetVolume()->GetLogicalVolume();           
-  //                                                 
-  //// check if we are in scoring volume             
-  ////G4String processName = step->GetPostStepPoint()  
-  ////                           ->GetProcessDefinedStep()->GetProcessName() 
-  //if (volume != fScoringVolume) return;
+  if (!fPhysVolume) {
+    const DetectorConstruction* detectorConstruction
+      = static_cast<const DetectorConstruction*>
+        (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+    fPhysVolume = detectorConstruction->GetPhysicalVolume();
+  }                                                
+  
+  // get volume of the current step
+  G4VPhysicalVolume * volume = track->GetVolume();
+  
+  // check if we are in scoring volume             
+  if (volume != fPhysVolume) return;
 
   // Record particle ID and its total energy at the start of the track
   //
@@ -55,10 +51,15 @@ void TrackingAction::PreUserTrackingAction(const G4Track * track)
 
   // Extract decay time
   //G4double globalTime = track->GetGlobalTime();
-  G4double localTime = track->GetLocalTime();
+  //G4double localTime = track->GetLocalTime();
+
+  //G4VPhysicalVolume * volume = track->GetVolume();
+  //G4cout << "Physical volume: " << (*volume) << G4endl;
 
   G4double totalEnergy = track->GetTotalEnergy(); 
   
+ 
+ 
   if (fParticleID == 2212 || // proton                               
       fParticleID == 2112 || // neutron                              
       fParticleID == 11   || fParticleID == -11 || // e-/e+           
@@ -73,6 +74,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track * track)
     fEventAction->FillVectorParticleID(fParticleID);  
     fEventAction->FillVectorTotalEnergy(totalEnergy); 
   }
+  
   //G4cout << fParticleName
   //       << " has encoding of "
   //       << fParticleID

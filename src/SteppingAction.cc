@@ -39,6 +39,7 @@
 #include "G4PVPlacement.hh"
 #include "G4DynamicParticle.hh"
 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(EventAction* eventAction)
@@ -68,9 +69,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4LogicalVolume* volume 
     = step->GetPreStepPoint()->GetTouchableHandle()
       ->GetVolume()->GetLogicalVolume();
-      
+
   // check if we are in scoring volume
   if (volume != fScoringVolume) return;
+
+  //G4cout << "This is SteppingAction" << G4endl;
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
@@ -84,7 +87,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   fParticleName = particle->GetParticleName();
   G4int particleID = particle->GetPDGEncoding();
 
-  G4double kinEnergy = dynParticle->GetKineticEnergy();
+  //G4double kinEnergy = dynParticle->GetKineticEnergy();
   G4double totalEnergy = track->GetTotalEnergy();
 
   //G4double globalTime = track->GetGlobalTime();

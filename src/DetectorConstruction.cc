@@ -45,7 +45,8 @@
 
 DetectorConstruction::DetectorConstruction()
 : G4VUserDetectorConstruction(),
-  fScoringVolume(0)
+  fScoringVolume(0),
+  fPhysVolume(0)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -126,14 +127,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         env_mat,             //its material
                         "Envelope");         //its name
                
-  new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(),         //at (0,0,0)
-                    logicEnv,                //its logical volume
-                    "Envelope",              //its name
-                    logicWorld,              //its mother  volume
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);          //overlaps checking
+  fPhysVolume = 
+    new G4PVPlacement(0,                       //no rotation
+                      G4ThreeVector(),         //at (0,0,0)
+                      logicEnv,                //its logical volume
+                      "Envelope",              //its name
+                      logicWorld,              //its mother  volume
+                      false,                   //no boolean operation
+                      0,                       //copy number
+                      checkOverlaps);          //overlaps checking
 
   // Set the envelope as scoring volume
   //
