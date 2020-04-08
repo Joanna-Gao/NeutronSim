@@ -62,8 +62,14 @@ class EventAction : public G4UserEventAction
     { fIsCaptured.push_back(isCaptured); }
     void SetEntryEnergy(G4double entryEnergy)
     { fEntryEnergy = entryEnergy; }
-    G4String GetSourceParticle()
-    { return fSourceParticle; }
+
+    G4String GetSourceParticle() { return fSourceParticle; }
+
+    // Function for checking if the energy should be stored as 
+    // the true entry energy of the source particle
+    G4bool IsTrueEntryEnergy() { return fCanStore; }
+    void StoredEntryEnergy() { fCanStore = false; }
+    
 
   private:
     RunAction*             fRunAction;
@@ -76,6 +82,7 @@ class EventAction : public G4UserEventAction
     std::vector<G4double> fTotalEnergy;
     std::vector<G4int>    fIsCaptured;
     G4double             fEntryEnergy;
+    G4bool           fCanStore = true;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

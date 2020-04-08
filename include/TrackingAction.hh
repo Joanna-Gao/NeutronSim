@@ -24,36 +24,44 @@
 // ********************************************************************
 //
 //
-/// \file DetectorConstruction.hh
-/// \brief Definition of the DetectorConstruction class
+/// \file TrackingAction.hh
+/// \brief Definition of the TrackingAction class
 
-#ifndef DetectorConstruction_h
-#define DetectorConstruction_h 1
+#ifndef TrackingAction_h
+#define TrackingAction_h 1
 
-#include "G4VUserDetectorConstruction.hh"
+#include "G4UserTrackingAction.hh"
 #include "globals.hh"
 
-class G4VPhysicalVolume;
+class EventAction;
 class G4LogicalVolume;
-class G4Tubs;
+class G4VPhysicalVolume;
+class DetectorConstruction;
 
-/// Detector construction class to define materials and geometry.
+/// Tracking action class
+/// 
 
-class DetectorConstruction : public G4VUserDetectorConstruction
+class TrackingAction : public G4UserTrackingAction
 {
   public:
-    DetectorConstruction();
-    virtual ~DetectorConstruction();
+    TrackingAction(EventAction* eventAction);
+    virtual ~TrackingAction() {}
 
-    virtual G4VPhysicalVolume* Construct();
-    
-    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
+    // method from the base class
+    void PreUserTrackingAction (const G4Track *) {}
+    void PostUserTrackingAction(const G4Track *) {}
 
-  protected:
-    G4LogicalVolume*  fScoringVolume;
+    G4bool IsANewTrack() { return fCanStoreTotalE; }
+    void TotalEnergyStored() { fCanStoreTotalE = false; }
+
+   private:
+    EventAction*         fEventAction;
+    G4VPhysicalVolume*    fPhysVolume;
+    G4String            fParticleName;
+    G4int                 fParticleID;
+    G4bool     fCanStoreTotalE = true;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
