@@ -33,33 +33,25 @@
 #include "G4UserTrackingAction.hh"
 #include "globals.hh"
 
-class EventAction;
-class G4LogicalVolume;
-class G4VPhysicalVolume;
-class DetectorConstruction;
-
 /// Tracking action class
 /// 
 
 class TrackingAction : public G4UserTrackingAction
 {
   public:
-    TrackingAction(EventAction* eventAction);
+    TrackingAction() {}
     virtual ~TrackingAction() {}
 
     // method from the base class
-    void PreUserTrackingAction (const G4Track *) {}
+    void PreUserTrackingAction (const G4Track *)
+    { fCanStoreTotalEnergy = true; }
     void PostUserTrackingAction(const G4Track *) {}
 
-    G4bool IsANewTrack() { return fCanStoreTotalE; }
-    void TotalEnergyStored() { fCanStoreTotalE = false; }
+    G4bool IsANewTrack() { return fCanStoreTotalEnergy; }
+    void IsNotANewTrack() { fCanStoreTotalEnergy = false; }
 
    private:
-    EventAction*         fEventAction;
-    G4VPhysicalVolume*    fPhysVolume;
-    G4String            fParticleName;
-    G4int                 fParticleID;
-    G4bool     fCanStoreTotalE = true;
+    G4bool     fCanStoreTotalEnergy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

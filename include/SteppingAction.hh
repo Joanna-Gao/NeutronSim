@@ -34,6 +34,7 @@
 #include "globals.hh"
 
 class EventAction;
+class TrackingAction;
 class G4Tubs;
 class G4LogicalVolume;
 
@@ -43,7 +44,8 @@ class G4LogicalVolume;
 class SteppingAction : public G4UserSteppingAction
 {
   public:
-    SteppingAction(EventAction* eventAction);
+    SteppingAction(EventAction* eventAction,
+                   TrackingAction* trackingAction);
     virtual ~SteppingAction();
 
     // method from the base class
@@ -51,6 +53,7 @@ class SteppingAction : public G4UserSteppingAction
 
    private:
     EventAction*         fEventAction;
+    TrackingAction*   fTrackingAction;
     G4LogicalVolume*   fScoringVolume;
     G4String            fParticleName;
     G4int            fPreviousTrackID; 

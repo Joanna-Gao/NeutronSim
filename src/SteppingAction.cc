@@ -30,6 +30,7 @@
 #include "SteppingAction.hh"
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
+#include "TrackingAction.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -40,9 +41,11 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SteppingAction::SteppingAction(EventAction* eventAction)
+SteppingAction::SteppingAction(EventAction* eventAction, 
+                               TrackingAction* trackingAction)
 : G4UserSteppingAction(),
   fEventAction(eventAction),
+  fTrackingAction(trackingAction),
   fScoringVolume(0)
 {}
 
@@ -146,7 +149,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //       << step->IsFirstStepInVolume()            
   //       << G4endl;                                
 
-  if (step->IsFirstStepInVolume())
+  if (fTrackingAction->IsANewTrack())
+  //(step->IsFirstStepInVolume())
   {
 
     if (particleID == 2212 || // proton                               
@@ -160,10 +164,14 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         particleID == 211  || particleID == -211|| // pi+/-           
         particleID == 321  || particleID == -321)  // K+/-            
     {
+      fEventAction->FillVectorParticleID(particleID); 
       fEventAction->FillVectorTotalEnergy(totalEnergy);
     }
+    
+    fTrackingAction->IsNotANewTrack();
   }
-
+  
+  /*
   // Store information about certain particles once its track has ended
   //
   if (trackStatus == fStopAndKill || processName == "Transportation") 
@@ -216,6 +224,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     //G4cout << "Accumulated energy deposit: " << fLocalEdep << G4endl;
   }
+  */
 
   //G4cout << fParticleName               
   //       << " has total energy of "

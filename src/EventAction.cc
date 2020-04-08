@@ -49,7 +49,8 @@ EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
   fStoredEdep(0.),
   fTotalEnergy(0.),
   fIsCaptured(0),
-  fEntryEnergy(0.)
+  fEntryEnergy(0.),
+  fCanStore(true)
 {
   const PrimaryGeneratorAction* generatorAction                       
    = static_cast<const PrimaryGeneratorAction*>                       
@@ -69,6 +70,7 @@ EventAction::~EventAction()
 void EventAction::BeginOfEventAction(const G4Event*)
 {    
   fEdep = 0.;
+  fCanStore = true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

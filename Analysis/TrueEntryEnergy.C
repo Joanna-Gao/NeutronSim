@@ -5,7 +5,7 @@
   cout << "How many ROOT files do you want to look at?" << endl;
   cin >> fileNumber;
 
-  int distanceList [] = {0, 1, 10, 30, 50, 70, 100};
+  int distanceList [] = {0, 1, 10, 100};
 
   // Create a profile plot                                           
   TCanvas *can = new TCanvas("can","Profile Plot for True Muon Entry Energy"); 

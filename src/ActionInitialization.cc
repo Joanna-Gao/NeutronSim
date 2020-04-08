@@ -32,8 +32,8 @@
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 #include "EventAction.hh"
+#include "TrackingAction.hh"
 #include "SteppingAction.hh"
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -66,8 +66,11 @@ void ActionInitialization::Build() const
   
   EventAction* eventAction = new EventAction(runAction, fAnalysisManager);
   SetUserAction(eventAction);
+
+  TrackingAction* trackingAction = new TrackingAction();
+  SetUserAction(trackingAction);
   
-  SetUserAction(new SteppingAction(eventAction));
+  SetUserAction(new SteppingAction(eventAction, trackingAction));
 }  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
