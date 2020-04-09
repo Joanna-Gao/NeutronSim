@@ -109,7 +109,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }
 
   G4double size = 0.8; 
-  G4double primaryParticleLocation = -1.; // With respect to the length of 20m
+  G4double primaryParticleLocation = -6.; // With respect to the length of 20m
                                         // Proportionalities:
                                         // 1m outside = 1.05 
                                         // 10m outside = 1.5

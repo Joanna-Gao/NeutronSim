@@ -12,7 +12,7 @@
   can->Clear();                                                      
 
   TProfile * hprof = new TProfile("hprof",
-                                  "Energy of Muon when It Entered Water",
+                                  "Energy of Muon When Entering Water",
                                    100,-1, 101,0,1000000);
 
   for (int x=0; x<fileNumber; ++x)
@@ -25,7 +25,7 @@
     //cout << "Please input a ROOT file which you need to display:" << endl;
     //cin >> fname;       //Input a ROOT file       
     string fname =
-        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events1TeVmu"+std::to_string((int)distance)+"m.root";
+        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events500GeVmu"+std::to_string((int)distance)+"m.root";
     auto file = TFile::Open(fname.c_str());
                                           
     cout << "Plotting " << fname << endl;
@@ -34,6 +34,7 @@
     TNtuple *InfoNtuple = (TNtuple*)file->Get("ParticleInfo"); 
     
     double entryEnergy = 0;
+    double totalEnergy = 0;
   
     InfoNtuple->SetBranchAddress("EntryEnergy", &entryEnergy); 
 
@@ -48,10 +49,13 @@
       
       // Readjust the energy to have units of GeV
       entryEnergy = entryEnergy/1000;
+      totalEnergy += entryEnergy;
 
       hprof->Fill(distance, entryEnergy);
     }
 
+    totalEnergy /= 1000;
+    std::cout << "Entry energy: " << totalEnergy << std::endl;
   }
 
   hprof->Draw();                                  
@@ -60,7 +64,7 @@
                                                
   //can->SetLogx();                            
                                                
-  can->SaveAs("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/MuonEntryEnergy.pdf");
+  can->SaveAs("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/MuonEntryEnergy(100GeV).pdf");
 
 
 
