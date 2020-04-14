@@ -80,7 +80,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   G4double world_rmin = 0.*m, 
            world_rmax = 2.*env_rmax,
-           world_height = 6.5*env_height;    //world cylinder height at 110m
+           world_height =  6.5*env_height; //world cylinder half height at 130m 
+               //52.*env_height; // world cyclinder half height at 1040m
                         
 
   G4Material* world_mat = nist->FindOrBuildMaterial("G4_CONCRETE");

@@ -2,10 +2,16 @@
 
 {
   int fileNumber;
-  cout << "How many ROOT files do you want to look at?" << endl;
+  cout << "How many ROOT files do you want to look at? (Max no. 5)" << endl;
   cin >> fileNumber;
 
-  int distanceList [] = {0, 1, 10, 100};
+  string sourceEnergy;
+  cout << "What energy do you want to look at? \
+(Choose from 100GeV, 500GeV and 1TeV)"
+       << endl;
+  cin >> sourceEnergy;
+
+  int distanceList [] = {0, 1, 10, 50, 100};
 
   // Create a profile plot                                           
   TCanvas *can = new TCanvas("can","Muon visible energy histogram"); 
@@ -25,7 +31,8 @@
     //cout << "Please input a ROOT file which you need to display:" << endl;
     //cin >> fname;       //Input a ROOT file       
     string fname = 
-        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events500GeVmu"+std::to_string((int)distance)+"m.root";
+        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events"+
+sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
     auto file = TFile::Open(fname.c_str());
                                           
     cout << "Plotting " << fname << endl;
@@ -100,7 +107,7 @@
   //cin >> imageName;       //Input a name for the saved file
   //can->SaveAs(imageName.c_str());                          
 
-  can->SaveAs("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/VisibleEnergy(500GeV).pdf");
+  can->SaveAs(Form("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/VisibleEnergy(%s).pdf", sourceEnergy.c_str()));
 
 
 

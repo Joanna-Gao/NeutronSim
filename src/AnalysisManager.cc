@@ -77,7 +77,7 @@ void AnalysisManager::Initialise()
   // Creating a tree container to handle histograms and ntuples.
   // This tree is associated to an output file.
   //
-  G4String fileName = "1000Events500GeVmu100m.root";
+  G4String fileName = "1000Events1TeVmu1000m.root";
   fRootFile = new TFile(fileName,"RECREATE");
   if (! fRootFile) {
     G4cout << " AnalysisManager::Initialise :" 

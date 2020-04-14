@@ -2,14 +2,14 @@
 
 {
   int distanceNumber;
-  cout << "How many distances do you want to look at? (Max no. 4)" << endl;
+  cout << "How many distances do you want to look at? (Max no. 5)" << endl;
   cin >> distanceNumber;
 
   int energyNumber;                                           
   cout << "How many source energy do you want to look at? (Max no. 3)" << endl; 
   cin >> energyNumber;                                        
 
-  int distanceList [] = {0, 1, 10, 100};
+  int distanceList [] = {0, 1, 10, 50, 100};
   int energyList [] = {100, 500, 1};
 
   // Create a profile plot                                           
