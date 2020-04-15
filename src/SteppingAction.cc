@@ -46,7 +46,9 @@ SteppingAction::SteppingAction(EventAction* eventAction,
 : G4UserSteppingAction(),
   fEventAction(eventAction),
   fTrackingAction(trackingAction),
-  fScoringVolume(0)
+  fScoringVolume(0),
+  fParticleName(""),
+  fLocalEdep(0.)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -69,27 +71,15 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4LogicalVolume* volume = 
       step->GetPreStepPoint()->GetTouchableHandle()
           ->GetVolume()->GetLogicalVolume();
-  
-  //G4cout << "Before checking, IsFirstStepInVolume: "
-  //       << step->IsFirstStepInVolume()
-  //       << G4endl;
 
   // check if we are in scoring volume
   if (volume != fScoringVolume) return;
-
-  //G4cout << "After checking, IsFirstStepInVolume: " 
-  //       << step->IsFirstStepInVolume()             
-  //       << G4endl;                                  
-
-  // the following steps are to store individual particle Edep
-  //fPreviousTrackID = fTrackID;
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
   fEventAction->AddEdep(edepStep); 
 
   G4Track *track = step->GetTrack();   
-  //fTrackID = track->GetTrackID();      
 
   // Extract particleID as defined by PDG MC numbering scheme 
   const G4DynamicParticle *dynParticle = track->GetDynamicParticle();
@@ -100,25 +90,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //G4double kinEnergy = dynParticle->GetKineticEnergy();
   G4double totalEnergy = track->GetTotalEnergy();
 
-  G4double globalTime = step->GetPreStepPoint()->GetGlobalTime();
-  G4double localTime = step->GetPreStepPoint()->GetLocalTime();
-
-  //G4cout << fParticleName
-  //       << " step local time: " 
-  //       << localTime 
-  ////     << ", track local time: " 
-  ////     << trackLocalTime 
-  //       << ", post step point local time: "
-  //       << postLocalTime
-  //       << ", \nstep global time: "
-  //       << globalTime
-  ////     << ", track global time: "
-  ////     << trackGlobalTime
-  //       << G4endl;
- 
-  //G4cout << "After checking, IsFirstStepInVolume: "
-  //       << step->IsFirstStepInVolume()            
-  //       << G4endl;                                
+  //G4double globalTime = step->GetPreStepPoint()->GetGlobalTime();
+  //G4double localTime = step->GetPreStepPoint()->GetLocalTime();
 
   // Extract neutron capture info
   G4TrackStatus trackStatus = track->GetTrackStatus();
@@ -144,10 +117,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     fEventAction->SetEntryEnergy(totalEnergy);
     fEventAction->StoredEntryEnergy();
   }
-
-  //G4cout << "After checking, IsFirstStepInVolume: "
-  //       << step->IsFirstStepInVolume()            
-  //       << G4endl;                                
 
   if (fTrackingAction->IsANewTrack())
   //(step->IsFirstStepInVolume())
@@ -176,12 +145,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   //
   if (trackStatus == fStopAndKill || processName == "Transportation") 
   {
-    //G4cout << "Track ID has changed from " 
-    //       << fPreviousTrackID 
-    //       << " to " 
-    //       << fTrackID 
-    //       << G4endl;
-    //
     //G4cout << "Accumulated EnergyDeposit: " 
     //       << fLocalEdep 
     //       << " stored, initialising..." 

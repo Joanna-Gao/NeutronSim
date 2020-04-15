@@ -77,8 +77,6 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {   
-  // accumulate statistics in run action
-  fRunAction->AddEdep(fEdep); 
 
   // Fill histograms
   fAnalysisManager->FillHisto(0, fEdep);

@@ -56,9 +56,7 @@ class SteppingAction : public G4UserSteppingAction
     TrackingAction*   fTrackingAction;
     G4LogicalVolume*   fScoringVolume;
     G4String            fParticleName;
-    G4int            fPreviousTrackID; 
-    G4int                fTrackID = 0;
-    G4double           fLocalEdep = 0;
+    G4double		   fLocalEdep;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
