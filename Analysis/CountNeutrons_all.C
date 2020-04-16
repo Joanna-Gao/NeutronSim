@@ -15,6 +15,7 @@
 
   // Create a profile plot                                           
   TCanvas *can = new TCanvas("can","Number of Neutrons");
+  can->Divide(1,3);
 
   TProfile * hprof1 = new TProfile("hprof1","",102,-1, 101,0,3000);
   TProfile * hprof2 = new TProfile("hprof2","",102,-1, 101,0,3000); 
@@ -89,9 +90,9 @@ std::to_string((int)sourceEnergy)+"TeVmu"+std::to_string((int)distance)+"m.root"
 
   }
 
-  hprof1->Draw();
-  hprof2->Draw("SAME"); 
-  hprof3->Draw("SAME"); 
+  can->cd(1); hprof1->Draw();
+  can->cd(2); hprof2->Draw();
+  can->cd(3); hprof3->Draw(); 
 
   //if (energyNumber == 2) 
   //  hprof2->Draw("SAME");

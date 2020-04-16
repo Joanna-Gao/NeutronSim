@@ -64,7 +64,7 @@ void ActionInitialization::Build() const
   RunAction* runAction = new RunAction(fAnalysisManager);
   SetUserAction(runAction);
   
-  EventAction* eventAction = new EventAction(runAction, fAnalysisManager);
+  EventAction* eventAction = new EventAction(fAnalysisManager);
   SetUserAction(eventAction);
 
   TrackingAction* trackingAction = new TrackingAction();

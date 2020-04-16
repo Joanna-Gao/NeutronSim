@@ -35,7 +35,6 @@
 #include "globals.hh"
 #include <vector>
 
-class RunAction;
 class PrimaryGeneratorAction;
 
 /// Event action class
@@ -44,7 +43,7 @@ class PrimaryGeneratorAction;
 class EventAction : public G4UserEventAction
 {
   public:
-    EventAction(RunAction* runAction, AnalysisManager* analysis);
+    EventAction(AnalysisManager* analysis);
     virtual ~EventAction();
 
     virtual void BeginOfEventAction(const G4Event* event);
@@ -72,7 +71,6 @@ class EventAction : public G4UserEventAction
     
 
   private:
-    RunAction*             fRunAction;
     G4double                    fEdep;
     AnalysisManager* fAnalysisManager;
     G4String          fSourceParticle;

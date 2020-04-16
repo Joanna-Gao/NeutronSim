@@ -38,9 +38,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction* runAction, AnalysisManager* analysis)
+EventAction::EventAction(AnalysisManager* analysis)
 : G4UserEventAction(),
-  fRunAction(runAction),
   fEdep(0.),
   fAnalysisManager(analysis),
   fSourceParticle(""),
@@ -77,8 +76,6 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {   
-  // accumulate statistics in run action
-  fRunAction->AddEdep(fEdep); 
 
   // Fill histograms
   fAnalysisManager->FillHisto(0, fEdep);
@@ -114,6 +111,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
   fStoredEdep.clear();
   fTotalEnergy.clear();
   fIsCaptured.clear();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

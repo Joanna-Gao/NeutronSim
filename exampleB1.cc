@@ -40,6 +40,7 @@
 #include "G4UImanager.hh"
 #include "FTFP_BERT.hh" 
 #include "FTFP_BERT_HP.hh"
+#include "G4OpticalPhysics.hh"
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -75,8 +76,10 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(new DetectorConstruction());
 
   // Physics list
-  G4VModularPhysicsList* physicsList = new FTFP_BERT_HP;
-  physicsList->SetVerboseLevel(1);
+  // Include additional Cherenkov processes
+  G4VModularPhysicsList* physicsList = new FTFP_BERT;
+  physicsList->RegisterPhysics(new G4OpticalPhysics);
+  physicsList->SetVerboseLevel(0);
   runManager->SetUserInitialization(physicsList);
     
   // User action initialization
