@@ -25,7 +25,7 @@
 //
 //
 /// \file RunAction.cc
-/// \brief Implementation of the RunAction class
+/// \Implementation of the RunAction class
 
 #include "RunAction.hh"
 #include "PrimaryGeneratorAction.hh"
@@ -34,7 +34,6 @@
 
 #include "G4RunManager.hh"
 #include "G4Run.hh"
-#include "G4AccumulableManager.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4UnitsTable.hh"
@@ -45,20 +44,7 @@
 RunAction::RunAction(AnalysisManager* analysis)
 : G4UserRunAction(),
   fAnalysisManager(analysis) 
-{ 
-  // add new units for dose
-  // 
-  const G4double milligray = 1.e-3*gray;
-  const G4double microgray = 1.e-6*gray;
-  const G4double nanogray  = 1.e-9*gray;  
-  const G4double picogray  = 1.e-12*gray;
-   
-  new G4UnitDefinition("milligray", "milliGy" , "Dose", milligray);
-  new G4UnitDefinition("microgray", "microGy" , "Dose", microgray);
-  new G4UnitDefinition("nanogray" , "nanoGy"  , "Dose", nanogray);
-  new G4UnitDefinition("picogray" , "picoGy"  , "Dose", picogray); 
-
-}
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

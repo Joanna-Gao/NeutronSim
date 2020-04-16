@@ -6,6 +6,15 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(B1)
 
+# You need to tell CMake where to find the ROOT installation. This can be 
+# done in a number of ways:
+#   - ROOT built with classic configure/make use the provided 
+#     $ROOTSYS/etc/cmake/FindROOT.cmake
+#   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation 
+#     prefix for ROOT
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}) 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake)
+
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
