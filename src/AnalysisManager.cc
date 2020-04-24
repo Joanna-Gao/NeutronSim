@@ -36,6 +36,7 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 
 #include "AnalysisManager.hh"
+#include "AnalysisMessenger.hh"
 #include "G4UnitsTable.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -43,7 +44,8 @@
 AnalysisManager::AnalysisManager()
 : fRootFile(0), 
   fTEdepNtuple(0), 
-  fParticleInfoNtuple(0), 
+  fParticleInfoNtuple(0),
+  fFileName(""),
   fTEdep(0.),
   fEventID(0),
   fParticleID(0),
@@ -61,6 +63,10 @@ AnalysisManager::AnalysisManager()
   fParticleInfoNtuple = 0;
 
   fInitialised = false;
+
+  // Create a messenger for this class
+  fMessenger = new AnalysisMessenger(this);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -68,6 +74,8 @@ AnalysisManager::AnalysisManager()
 AnalysisManager::~AnalysisManager()
 {
   if (fRootFile) delete fRootFile;
+  delete fMessenger;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -77,8 +85,7 @@ void AnalysisManager::Initialise()
   // Creating a tree container to handle histograms and ntuples.
   // This tree is associated to an output file.
   //
-  G4String fileName = "MuonAnalysis.root";
-  fRootFile = new TFile(fileName,"RECREATE");
+  fRootFile = new TFile(fFileName.c_str(),"RECREATE");
   if (! fRootFile) {
     G4cout << " AnalysisManager::Initialise :" 
            << " problem creating the ROOT TFile "
@@ -108,7 +115,7 @@ void AnalysisManager::Initialise()
   fParticleInfoNtuple->Branch("NeutronCapture", &fIsCaptured);
   fParticleInfoNtuple->Branch("EntryEnergy", &fEntryEnergy, "EntryEnergy/D"); 
 
-  G4cout << "\n----> Output file is open in " << fileName << G4endl;
+  //G4cout << "\n----> Output file is open in " << fileName << G4endl;
 
   fInitialised = true;
 }

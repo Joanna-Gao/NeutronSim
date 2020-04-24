@@ -41,6 +41,7 @@
 class TFile;
 class TTree;
 class TH1D;
+class AnalysisMessenger;
 
 const G4int kMaxHisto = 1;
 
@@ -66,11 +67,17 @@ class AnalysisManager
                                 std::vector<G4int> isCaptured,
                                 G4double entryEnergy);
         
+    G4String GetRootFileName() { return fFileName; }
+    void SetRootFileName(G4String name) { fFileName = name; }
+
   private:
     TFile*                fRootFile;
-    TH1D*                 fHisto[kMaxHisto];            
-    TTree*                fTEdepNtuple;    
-    TTree*                fParticleInfoNtuple;    
+    TH1D*                 fHisto[kMaxHisto];
+    TTree*                fTEdepNtuple;
+    TTree*                fParticleInfoNtuple;
+    
+    AnalysisMessenger*    fMessenger;
+    G4String              fFileName;
 
     G4bool                fInitialised;
     G4double              fTEdep;
