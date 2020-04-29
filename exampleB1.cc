@@ -41,6 +41,7 @@
 #include "FTFP_BERT.hh" 
 #include "FTFP_BERT_HP.hh"
 #include "G4OpticalPhysics.hh"
+#include "G4RadioactiveDecay"
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -78,7 +79,10 @@ int main(int argc,char** argv)
   // Physics list
   // Include additional Cherenkov processes
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
+  // The following add-ons are to match that incorporated in the physics list
+  // in the WCSim
   physicsList->RegisterPhysics(new G4OpticalPhysics);
+  physicsList->RegisterPhysics(new G4RadioactiveDecay);
   physicsList->SetVerboseLevel(0);
   runManager->SetUserInitialization(physicsList);
     

@@ -4,10 +4,10 @@
 #include "AnalysisMessenger.hh"
 #include "AnalysisManager.hh"
 
-#include "G4UImessenger.hh"       
-#include "G4UIdirectory.hh"       
-#include "G4UIcommand.hh"         
-#include "G4UIcmdWithAString.hh" 
+#include "G4UImessenger.hh" 
+#include "G4UIdirectory.hh"
+#include "G4UIcommand.hh"
+#include "G4UIcmdWithAString.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
 

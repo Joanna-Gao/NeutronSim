@@ -23,9 +23,9 @@ class AnalysisMessenger : public G4UImessenger
     virtual void SetNewValue(G4UIcommand *command, G4String newValue);
 
   private:
-    G4UIdirectory *    fOutputDirectory;
-    G4UIcmdWithAString *      fFileName;
-    AnalysisManager *  fAnalysisManager;
+    G4UIdirectory*    fOutputDirectory;
+    G4UIcmdWithAString*      fFileName;
+    AnalysisManager*  fAnalysisManager;
 
 };
 
