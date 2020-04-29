@@ -17,5 +17,6 @@
 #
 /gun/particle proton
 /gun/energy 1 TeV
+/Output/FileName TestFileName.root
 #
 /run/beamOn 1
