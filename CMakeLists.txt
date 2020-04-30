@@ -51,8 +51,8 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(exampleB1 exampleB1.cc ${sources} ${headers})
-target_link_libraries(exampleB1 ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
+add_executable(NeutronSim NeutronSim.cc ${sources} ${headers})
+target_link_libraries(NeutronSim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
@@ -61,7 +61,7 @@ target_link_libraries(exampleB1 ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
 #
 set(EXAMPLEB1_SCRIPTS
   init_vis.mac
-  protonBeamTest.mac
+  muonBeamTest.mac
   vis.mac
   )
 
@@ -76,6 +76,6 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS exampleB1 DESTINATION bin)
+install(TARGETS NeutronSim DESTINATION bin)
 
 

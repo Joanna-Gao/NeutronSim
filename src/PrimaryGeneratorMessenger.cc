@@ -22,7 +22,7 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* Gun
 
 PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger()
 {
-  delete fOutputDirectory;
+  delete fGunDirectory;
 
 
 }

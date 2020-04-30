@@ -1,7 +1,7 @@
-# Macro file for example B1
+# Macro file for NeutronSim
 # 
 # Can be run in batch, without graphic
-# or interactively: Idle> /control/execute run1.mac
+# or interactively: Idle> /control/execute muonBeamTest.mac
 #
 # Change the default number of workers (in multi-threading mode) 
 #/run/numberOfWorkers 4
@@ -15,8 +15,8 @@
 /tracking/verbose 0 
 # 
 #
-/gun/particle proton
-/gun/energy 1 TeV
-/Output/FileName TestFileName.root
+/gun/particle mu-
+/gun/energy {KE} GeV
+/Output/FileName {KE}GeVMuon{Distance}.root
 #
-/run/beamOn 1
+/run/beamOn 1000

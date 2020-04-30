@@ -95,7 +95,7 @@ B1:
  A- VISUALISATION
 
    The visualization manager is set via the G4VisExecutive class
-   in the main() function in exampleB1.cc.    
+   in the main() function in NeutronSim.cc.    
    The initialisation of the drawing is done via a set of /vis/ commands
    in the macro vis.mac. This macro is automatically read from
    the main function when the example is used in interactive running mode.
@@ -140,15 +140,15 @@ B1:
  B- USER INTERFACES
  
    The user command interface is set via the G4UIExecutive class
-   in the main() function in exampleB1.cc 
+   in the main() function in NeutronSim.cc 
    The selection of the user command interface is then done automatically 
    according to the Geant4 configuration or it can be done explicitly via 
    the third argument of the G4UIExecutive constructor (see exampleB4a.cc). 
  
  C- HOW TO RUN
 
-    - Execute exampleB1 in the 'interactive mode' with visualization:
-        % ./exampleB1
+    - Execute NeutronSim in the 'interactive mode' with visualization:
+        % ./NeutronSim
       and type in the commands from run1.mac line by line:  
         Idle> /control/verbose 2
         Idle> /tracking/verbose 1
@@ -160,9 +160,9 @@ B1:
         ....
         Idle> exit
 
-    - Execute exampleB1  in the 'batch' mode from macro files 
+    - Execute NeutronSim  in the 'batch' mode from macro files 
       (without visualization)
-        % ./exampleB1 run2.mac
-        % ./exampleB1 exampleB1.in > exampleB1.out
+        % ./NeutronSim run2.mac
+        % ./NeutronSim NeutronSim.in > NeutronSim.out
 
 	
