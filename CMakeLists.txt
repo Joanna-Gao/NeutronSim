@@ -60,8 +60,9 @@ target_link_libraries(NeutronSim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
 # relies on these scripts being in the current working directory.
 #
 set(EXAMPLEB1_SCRIPTS
-  init_vis.mac
+  runAll.mac
   muonBeamTest.mac
+  init_vis.mac 
   vis.mac
   )
 

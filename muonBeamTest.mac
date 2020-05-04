@@ -7,7 +7,7 @@
 #/run/numberOfWorkers 4
 #
 # Initialize kernel
-/run/initialize
+#/run/initialize
 #
 /control/verbose 0
 /run/verbose 1
@@ -17,6 +17,6 @@
 #
 /gun/particle mu-
 /gun/energy {KE} GeV
-/Output/FileName {KE}GeVMuon{Distance}.root
+/Output/FileName {KE}GeVMuon.root
 #
 /run/beamOn 1000

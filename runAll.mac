@@ -1,0 +1,16 @@
+# Macro file for running with different source energy
+# 
+# Can be run in batch, without graphic
+#
+# Change the default number of workers (in multi-threading mode) 
+#/run/numberOfWorkers 4
+#
+# Initialize kernel
+/run/initialize
+#
+# 
+/control/foreach muonBeamTest.mac KE "100 500"
+#/control/foreach muonBeamTest.mac Distance (0m)
+
+
+
