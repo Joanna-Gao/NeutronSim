@@ -19,4 +19,4 @@
 /gun/energy {KE} GeV
 /Output/FileName {KE}GeVMuon.root
 #
-/run/beamOn 1000
+/run/beamOn 10

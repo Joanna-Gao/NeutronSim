@@ -122,9 +122,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4double y0 = size * envRMax * std::cos(envPhi) * (G4UniformRand()-0.5);
   G4double z0 = primaryParticleLocation * envZ;
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, z0));
-
+  //fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, z0));
+  fParticleGun->SetParticlePosition(G4ThreeVector(0, 0, z0)); 
+  
   fParticleGun->GeneratePrimaryVertex(anEvent);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
