@@ -28,6 +28,7 @@
 /// \brief Implementation of the PrimaryGeneratorAction class
 
 #include "PrimaryGeneratorAction.hh"
+#include "PrimaryGeneratorMessenger.hh"
 
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
@@ -45,7 +46,9 @@
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction(),
   fParticleGun(0), 
-  fEnvelopeTubs(0)
+  fEnvelopeTubs(0),
+  fMessenger(0),
+  fActualz0(0.)
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
@@ -58,6 +61,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   fParticleGun->SetParticleEnergy(1.*TeV);
+
+  // Create a messenger for this class
+  //fMessenger = new PrimaryGeneratorMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -65,6 +71,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
   delete fParticleGun;
+  delete fMessenger;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -109,15 +116,18 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }
 
   G4double size = 0.8; 
-  G4double primaryParticleLocation = -1.; // With respect to the length of 20m
-                                        // Proportionalities:
-                                        // 1m outside = 1.05 
-                                        // 10m outside = 1.5
-                                        // 20m outside = 2.
-                                        // 30m outside = 2.5
-                                        // 50m outside = 3.5
-                                        // 100m outside = 6.
-                                        // 1000m outside = 51.
+
+  // Ratio that determin where z0 of the gun is
+  G4double primaryParticleLocation = -1.5;//-(fActualz0+20.)/20.; 
+                                        // With respect to the length of 20m
+                                        // Proportionalities (ALL NEGATIVE!):
+                                        // 1m outside = -1.05 
+                                        // 10m outside = -1.5
+                                        // 20m outside = -2.
+                                        // 30m outside = -2.5
+                                        // 50m outside = -3.5
+                                        // 100m outside = -6.
+                                        // 1000m outside = -51.
   G4double x0 = size * envRMax * std::sin(envPhi) * (G4UniformRand()-0.5);
   G4double y0 = size * envRMax * std::cos(envPhi) * (G4UniformRand()-0.5);
   G4double z0 = primaryParticleLocation * envZ;

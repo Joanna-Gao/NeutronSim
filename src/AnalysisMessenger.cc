@@ -19,14 +19,14 @@ AnalysisMessenger::AnalysisMessenger(AnalysisManager* analysis)
 {
   // Set the command path for the new UI command
   fOutputDirectory = new G4UIdirectory("/Output/");
-  fOutputDirectory->SetGuidance("Commands to set output options.");
+  fOutputDirectory->SetGuidance("Commands to set output options");
 
   // Set the specific command for setting output file name
   fFileName = new G4UIcmdWithAString("/Output/FileName", this);
-  fFileName->SetGuidance("Set the output ROOT file name.");
+  fFileName->SetGuidance("Set the output ROOT file name");
   fFileName->SetParameterName("RootFileName", false);
 
-  // Set initial value to AnalysisManager
+  // Set default value to AnalysisManager
   fAnalysisManager->SetRootFileName("MuonAnalysis.root");
 
 }

@@ -10,6 +10,7 @@
 class PrimaryGeneratorAction;
 class G4UIdirectory;
 class G4UIcommand;
+class G4UIcmdWithADoubleAndUnit;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......  
 
@@ -19,12 +20,12 @@ class PrimaryGeneratorMessenger: public G4UImessenger
     PrimaryGeneratorMessenger(PrimaryGeneratorAction*);
     virtual ~PrimaryGeneratorMessenger();
 
-    virtual G4String GetCurrentValue(G4UIcommand *command);
     virtual void SetNewValue(G4UIcommand *command, G4String newValue);
 
   private:
     PrimaryGeneratorAction*     fPGAction;
     G4UIdirectory*              fGunDirectory;    
+    G4UIcmdWithADoubleAndUnit*  fGunZPosition;
 
 };
 
