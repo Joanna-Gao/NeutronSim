@@ -81,7 +81,7 @@ int main(int argc,char** argv)
   G4VModularPhysicsList* physicsList = new FTFP_BERT_HP;
   // The following add-ons are to match that incorporated in the physics list
   // in the WCSim
-  physicsList->RegisterPhysics(new G4OpticalPhysics);
+  //physicsList->RegisterPhysics(new G4OpticalPhysics);
   //physicsList->RegisterPhysics(new G4RadioactiveDecay());
   physicsList->SetVerboseLevel(0);
   runManager->SetUserInitialization(physicsList);

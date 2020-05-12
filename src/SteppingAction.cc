@@ -98,10 +98,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4String processName = step->GetPostStepPoint()
                              ->GetProcessDefinedStep()->GetProcessName(); 
 
-  // Record muon decays
-  //if (fParticleName == "mu-" && processName == "Decay")
-  //  G4cout<<"Muon decayed!"<<G4endl;
-  
   //G4cout << fParticleName
   //       << " track status: "
   //       << trackStatus
@@ -111,13 +107,16 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   
   // Store the true energy of the source when it enters the water
   //
-  if (fParticleName == fEventAction->GetSourceParticle() && 
-      fEventAction->IsTrueEntryEnergy())
+  if (fEventAction->IsTrueEntryEnergy() &&
+      //processName == "Transportation" &&
+      fParticleName == fEventAction->GetSourceParticle())
   {
     fEventAction->SetEntryEnergy(totalEnergy);
     fEventAction->StoredEntryEnergy();
   }
 
+
+  /*
   if (fTrackingAction->IsANewTrack())
   //(step->IsFirstStepInVolume())
   {
@@ -139,11 +138,12 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
     
     fTrackingAction->IsNotANewTrack();
   }
+  */
   
-  /*
   // Store information about certain particles once its track has ended
   //
-  if (trackStatus == fStopAndKill || processName == "Transportation") 
+  if (trackStatus == fStopAndKill)
+      //processName == "Transportation") 
   {
     //G4cout << "Accumulated EnergyDeposit: " 
     //       << fLocalEdep 
@@ -165,7 +165,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         particleID == 211  || particleID == -211|| // pi+/-
         particleID == 321  || particleID == -321)  // K+/-
       {
-        fEventAction->FillVectorEdep(fLocalEdep);
+        //fEventAction->FillVectorEdep(fLocalEdep);
         fEventAction->FillVectorParticleID(particleID);   
 
         if (processName == "nCapture")            
@@ -177,8 +177,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
           //       << G4endl;
       }
 
-    fLocalEdep = 0;
+    //fLocalEdep = 0;
   }
+  /*
   else {
     
     //G4cout << "Energy deposit in this step: " << edepStep << G4endl; 
