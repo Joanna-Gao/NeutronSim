@@ -85,6 +85,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
   fEventID = event->GetEventID();
 
+  /*
   if (fTotalEnergy.size() != fParticleID.size())
   {
     G4ExceptionDescription msg;                                
@@ -97,6 +98,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
     G4Exception("EventAction::EndOfEventAction()", 
      "MyCode0002",JustWarning,msg); 
   }
+  */
 
   G4cout << "Event ID " << fEventID << " finished." << G4endl;
 

@@ -108,7 +108,6 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   // Store the true energy of the source when it enters the water
   //
   if (fEventAction->IsTrueEntryEnergy() &&
-      //processName == "Transportation" &&
       fParticleName == fEventAction->GetSourceParticle())
   {
     fEventAction->SetEntryEnergy(totalEnergy);
