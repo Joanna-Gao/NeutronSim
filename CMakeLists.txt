@@ -63,6 +63,7 @@ set(EXAMPLEB1_SCRIPTS
   simConfig.mac
   muonBeamTest.mac
   job1.sh
+  printSubmit.sh
   runjobs.sh
   init_vis.mac 
   vis.mac
