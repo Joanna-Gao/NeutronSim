@@ -3,4 +3,5 @@
 #SBATCH --output=/scratch/users/%u/%j.out
 #SBATCH --job-name=MuonSim
 
-srun -l job1.sh
+./NeutronSim simConfig.mac
+
