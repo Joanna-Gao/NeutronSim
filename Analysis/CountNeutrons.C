@@ -2,16 +2,18 @@
 
 {
   int fileNumber;
-  cout << "How many ROOT files do you want to look at? (Max no. 5)" << endl;
+  cout << "How many ROOT files do you want to look at? (Max no. 9, 100m is\
+ the 5th)" 
+       << endl;
   cin >> fileNumber;
 
   string sourceEnergy;
   cout << "What energy do you want to look at? \
-(Choose from 100GeV, 500GeV and 1TeV)"
+(Choose from 100GeV, 300GeV, 500GeV, 700GeV and 1TeV)"
        << endl;
   cin >> sourceEnergy;
 
-  int distanceList [] = {0, 1, 10, 50, 100};
+  int distanceList [] = {0, 1, 10, 50, 100, 300, 500, 700, 1000};
 
   // Create a profile plot                                           
   TCanvas *can = new TCanvas("can","Number of Neutrons");
@@ -19,7 +21,7 @@
 
   TProfile * hprof = new TProfile("hprof",
                                   "No. of Neutrons Deposited Energy in Water",
-                                   102,-1, 101,0,10000);
+                                   1002,-1, 1001,0,10000,"s");
 
   for (int x=0; x<fileNumber; ++x)
   {
@@ -31,8 +33,11 @@
     //cout << "Please input a ROOT file which you need to display:" << endl;
     //cin >> fname;       //Input a ROOT file       
     string fname =
-        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events"+
-sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
+        "~/Documents/PhD/Geant4_Projects/RootFiles/28May/"+sourceEnergy+"Muon"+
+std::to_string((int)distance)+"m_HP.root";
+
+//        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events"+
+//sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
     auto file = TFile::Open(fname.c_str());
                                           
     cout << "Plotting " << fname << endl;
@@ -64,15 +69,16 @@ sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
 
   }
 
-  int binList [] = {2,3,12,52,102};             
+  int binList [] = {2,3,12,52,102,302,502,702,1002};             
                                                 
-  for (int bin=0; bin<5; ++bin)                 
-    cout << "100GeV, Bin no "                   
+  for (int bin=0; bin<fileNumber; ++bin)                 
+    cout << sourceEnergy
+         << ", Bin no "                   
          << binList[bin]                        
          << ", bin content "                    
          << hprof->GetBinContent(binList[bin]) 
-         << ", bin error "                      
-         << hprof->GetBinError(binList[bin])   
+         << ", standard diviation is "                      
+         << hprof->GetBinError(binList[bin])
          << endl;                               
 
   hprof->Draw();                                  
@@ -81,7 +87,7 @@ sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
                                                
   //can->SetLogx();                            
                                                
-  can->SaveAs(Form("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/NumberOfNeutron(%s).pdf", sourceEnergy.c_str()));
+  //can->SaveAs(Form("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/NumberOfNeutron(%s).pdf", sourceEnergy.c_str()));
 
 
 

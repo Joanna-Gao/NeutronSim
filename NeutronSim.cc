@@ -78,7 +78,7 @@ int main(int argc,char** argv)
 
   // Physics list
   // Include additional Cherenkov processes
-  G4VModularPhysicsList* physicsList = new FTFP_BERT_HP;
+  G4VModularPhysicsList* physicsList = new FTFP_BERT;
   // The following add-ons are to match that incorporated in the physics list
   // in the WCSim
   //physicsList->RegisterPhysics(new G4OpticalPhysics);

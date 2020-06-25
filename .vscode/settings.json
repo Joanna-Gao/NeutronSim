@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "test.C": "cpp",
+        "ChooseToPlot.C": "cpp",
+        "CountNeutrons_all.C": "cpp",
+        "NeutronHsit.C": "cpp",
+        "TrueEntryEnergy.C": "cpp",
+        "CalculateMuVisibleE.C": "cpp"
+    }
+}

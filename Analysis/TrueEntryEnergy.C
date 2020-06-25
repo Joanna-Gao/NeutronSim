@@ -2,7 +2,7 @@
 
 {
   int fileNumber;
-  cout << "How many ROOT files do you want to look at? (Max no. 5)" << endl;
+  cout << "How many ROOT files do you want to look at? (Max no. 9)" << endl;
   cin >> fileNumber;
 
   string sourceEnergy;
@@ -12,7 +12,9 @@
   cin >> sourceEnergy;
 
 
-  int distanceList [] = {0, 1, 10, 50, 100};
+  int distanceList [] = //{0,1,10,20,30,50,60,70,100}; // for 100 GeV
+                        //{0,1,10,30,50,100,300,500,700}; // for 500 GeV
+                        {0, 1, 10, 50, 100, 300, 500, 700, 1000}; // for 1 TeV
 
   // Create a profile plot                                           
   TCanvas *can = new TCanvas("can","Profile Plot for True Muon Entry Energy"); 
@@ -20,7 +22,7 @@
 
   TProfile * hprof = new TProfile("hprof",
                                   "Energy of Muon When Entering Water",
-                                   102,-1, 101,0,1000000);
+                                   1002,-1, 1001,0,1000000,"s");
 
   for (int x=0; x<fileNumber; ++x)
   {
@@ -32,8 +34,12 @@
     //cout << "Please input a ROOT file which you need to display:" << endl;
     //cin >> fname;       //Input a ROOT file       
     string fname =
-        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events"+
-sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
+        "~/Documents/PhD/Geant4_Projects/RootFiles/replot/"+sourceEnergy+"Muon"+
+std::to_string((int)distance)+"m_HP.root";
+
+
+//        "~/Documents/PhD/Geant4_Projects/MuonAnalysis-build/1000Events"+
+//sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
     auto file = TFile::Open(fname.c_str());
                                           
     cout << "Plotting " << fname << endl;
@@ -66,8 +72,8 @@ sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
     std::cout << "Entry energy: " << totalEnergy << std::endl;
   }
 
-  int binList [] = {2,3,12,52,102};
-  for (int bin=0; bin<5; ++bin)
+  int binList [] = {2,3,12,52,102,302,502,702,1002};
+  for (int bin=0; bin<9; ++bin)
     cout << sourceEnergy
          << " Bin no "
          << binList[bin]
@@ -83,7 +89,7 @@ sourceEnergy+"mu"+std::to_string((int)distance)+"m.root";
                                                
   //can->SetLogx();                            
                                                
-  can->SaveAs(Form("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/MuonEntryEnergy(%s).pdf", sourceEnergy.c_str()));
+  //can->SaveAs(Form("/Users/SilverJr/Documents/PhD/Geant4_Projects/NeutronSim/GeneratedPlots/MuonEntryEnergy(%s).pdf", sourceEnergy.c_str()));
 
 
 
