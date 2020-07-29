@@ -87,16 +87,24 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   fParticleName = particle->GetParticleName();
   G4int particleID = particle->GetPDGEncoding();
 
+  // Kill all created secondary particles to speed up the simulation
+  //
+  if (fParticleName != fEventAction->GetSourceParticle())
+      track->SetTrackStatus(fKillTrackAndSecondaries);
+
+
   //G4double kinEnergy = dynParticle->GetKineticEnergy();
   G4double totalEnergy = track->GetTotalEnergy();
 
   //G4double globalTime = step->GetPreStepPoint()->GetGlobalTime();
   //G4double localTime = step->GetPreStepPoint()->GetLocalTime();
 
+  /*
   // Extract neutron capture info
   G4TrackStatus trackStatus = track->GetTrackStatus();
   G4String processName = step->GetPostStepPoint()
                              ->GetProcessDefinedStep()->GetProcessName(); 
+  */
 
   //G4cout << fParticleName
   //       << " track status: "
@@ -139,8 +147,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   }
   */
   
+  /*
   // Store information about certain particles once its track has ended
   //
+  
   if (trackStatus == fStopAndKill)
       //processName == "Transportation") 
   {
@@ -178,6 +188,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
     //fLocalEdep = 0;
   }
+  */
+
   /*
   else {
     
