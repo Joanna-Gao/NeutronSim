@@ -89,8 +89,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
   // Kill all created secondary particles to speed up the simulation
   //
-  if (fParticleName != fEventAction->GetSourceParticle())
-      track->SetTrackStatus(fKillTrackAndSecondaries);
+  //if (fParticleName != fEventAction->GetSourceParticle())
+  //    track->SetTrackStatus(fKillTrackAndSecondaries);
 
 
   //G4double kinEnergy = dynParticle->GetKineticEnergy();

@@ -118,7 +118,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4double size = 0.8; 
 
   // Ratio that determin where z0 of the gun is
-  G4double primaryParticleLocation = -1.05;
+  G4double primaryParticleLocation = -51.;
                                         // With respect to the length of 20m
                                         // Proportionalities (ALL NEGATIVE!):
                                         // 1m outside = -1.05 
