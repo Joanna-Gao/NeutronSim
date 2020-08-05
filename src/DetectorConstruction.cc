@@ -64,9 +64,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   //G4double env_sizeXY = 20*cm, env_sizeZ = 30*cm;
   G4double env_rmin = 0.*m, env_rmax = 20.*m, env_height = 20.*m; //zHALFlength!
-  G4double angleMin = 0.*deg, angleMax = 360.*deg;
-
-  G4Material* env_mat = nist->FindOrBuildMaterial("G4_WATER");
+  G4double angleMin = 0.*deg, angleMax = 360.*deg; 
    
   // Option to switch on/off checking of volumes overlaps
   //
@@ -109,10 +107,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                       false,                 //no boolean operation
                       0,                     //copy number
                       checkOverlaps);        //overlaps checking
-                     
+  
+  //
+  // Rock volume
+  //
+  G4Material*                   
+  
+
+
+
   //     
-  // Envelope
+  // Water Envelope
   //  
+  G4Material* env_mat = nist->FindOrBuildMaterial("G4_WATER");
+
   G4Tubs* solidEnv =    
    new G4Tubs("Envelope",                    //its name     
                env_rmin,                     //inner radius 
