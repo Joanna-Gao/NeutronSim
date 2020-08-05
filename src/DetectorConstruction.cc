@@ -136,7 +136,7 @@ G4cout<<"GetSurfaceTolerance()"<<G4GeometryTolerance::GetInstance()->GetSurfaceT
                                    
   G4VPhysicalVolume* physRock = 
     new G4PVPlacement(0,                     //no rotation
-                      G4ThreeVector(0.,0.,-75.),
+                      G4ThreeVector(0.,0.,-75.*m),
                       logicRock,            //its logical volume
                       "Rock",               //its name
                       logicWorld,                     //its mother  volume

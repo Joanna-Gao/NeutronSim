@@ -9,6 +9,8 @@
 #include "G4UIcommand.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 
+#include "G4SystemOfUnits.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......  
 
 PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* Gun)
@@ -50,7 +52,7 @@ void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand *command,
                                             G4String newValue)
 {
   if (command == fGunZPosition)
-    fPGAction->SetGunZPosition(fGunZPosition->GetNewDoubleValue(newValue));
+    fPGAction->SetGunZPosition(fGunZPosition->GetNewDoubleValue(newValue*m));
 
 }
 
