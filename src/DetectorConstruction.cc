@@ -31,15 +31,11 @@
 
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
-#include "G4Box.hh"
-#include "G4Cons.hh"
-#include "G4Orb.hh"
-#include "G4Sphere.hh"
 #include "G4Tubs.hh"
-#include "G4Trd.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4GeometryTolerance.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -73,16 +69,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //     
   // World
   //
-  //G4double world_sizeXY = 1.2*env_sizeXY;
-  //G4double world_sizeZ  = 1.2*env_sizeZ;
-  
   G4double world_rmin = 0.*m, 
            world_rmax = 2.*env_rmax,
-           world_height =  6.5*env_height; //world cylinder half height at 130m 
+           world_height =  7.*env_height; //world cylinder half height at 140m 
                //52.*env_height; // world cyclinder half height at 1040m
                         
 
-  G4Material* world_mat = nist->FindOrBuildMaterial("G4_CONCRETE");
+  G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
   
   G4Tubs* solidWorld =    
     new G4Tubs("World",                      //its name
@@ -111,10 +104,46 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // Rock volume
   //
-  G4Material*                   
+  G4Material* rock_mat = nist->FindOrBuildMaterial("G4_CONCRETE");                  
+ 
+  G4double rock_rmin = env_rmin, 
+           rock_rmax = env_rmax,
+           rock_height = 2.75*env_height - 
+      		         G4GeometryTolerance::GetInstance()
+			 ->GetSurfaceTolerance()/(10.*m); 
+					   //rock cylinder half height at 55m
+					   //rock height total 110m 
+               //25.75*env_height - G4GeometryTolerance::GetInstance()
+               //->GetSurfaceTolerance()/(10.*m); 
+               				  // rock cyclinder half height at 515m
+ 
+G4cout<<"GetSurfaceTolerance()"<<G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()<<G4endl;
+
+ 
+  G4Tubs* solidRock =    
+    new G4Tubs("Rock",                      //its name
+                rock_rmin,                  //inner radius
+                rock_rmax,                  //outer radius
+                rock_height,                //its height
+                angleMin,                    //start angle
+                angleMax);                   //its height
+                                                                                 
+      
+  G4LogicalVolume* logicRock =                         
+    new G4LogicalVolume(solidRock,          //its solid
+                        rock_mat,           //its material
+                        "Rock");            //its name
+                                   
+  G4VPhysicalVolume* physRock = 
+    new G4PVPlacement(0,                     //no rotation
+                      G4ThreeVector(0.,0.,-75.),
+                      logicRock,            //its logical volume
+                      "Rock",               //its name
+                      logicWorld,                     //its mother  volume
+                      false,                 //no boolean operation
+                      0,                     //copy number                       
+                      checkOverlaps);        //overlaps checking
   
-
-
 
   //     
   // Water Envelope
