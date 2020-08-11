@@ -23,59 +23,31 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file StackingAction.hh
+/// \brief Definition of the StackingAction class
 //
-/// \file ActionInitialization.cc
-/// \brief Implementation of the ActionInitialization class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "ActionInitialization.hh"
-#include "AnalysisManager.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "RunAction.hh"
-#include "EventAction.hh"
-#include "TrackingAction.hh"
-#include "SteppingAction.hh"
-#include "StackingAction.hh"
+#ifndef StackingAction_h
+#define StackingAction_h 1
+
+#include "G4UserStackingAction.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::ActionInitialization(AnalysisManager* analysis)
-: G4VUserActionInitialization(),
-  fAnalysisManager(analysis)
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-ActionInitialization::~ActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void ActionInitialization::BuildForMaster() const
+class StackingAction : public G4UserStackingAction
 {
-  RunAction* runAction = new RunAction(fAnalysisManager);
-  SetUserAction(runAction);
-}
+  public:
+    StackingAction();
+   ~StackingAction();
+     
+    virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track*);
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void ActionInitialization::Build() const
-{
-  SetUserAction(new PrimaryGeneratorAction());
+#endif
 
-  RunAction* runAction = new RunAction(fAnalysisManager);
-  SetUserAction(runAction);
-  
-  EventAction* eventAction = new EventAction(fAnalysisManager);
-  SetUserAction(eventAction);
-
-  TrackingAction* trackingAction = new TrackingAction();
-  SetUserAction(trackingAction);
-  
-  SetUserAction(new SteppingAction(eventAction, trackingAction));
- 
-  StackingAction* stackingAction = new StackingAction();
-         SetUserAction(stackingAction);
-
-}  
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
