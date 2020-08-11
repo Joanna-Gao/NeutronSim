@@ -23,59 +23,40 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file StackingAction.cc
+/// \brief Implementation of the StackingAction class
 //
-/// \file ActionInitialization.cc
-/// \brief Implementation of the ActionInitialization class
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "ActionInitialization.hh"
-#include "AnalysisManager.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "RunAction.hh"
-#include "EventAction.hh"
-#include "TrackingAction.hh"
-#include "SteppingAction.hh"
 #include "StackingAction.hh"
+//#include "Run.hh"
+
+#include "G4RunManager.hh"
+#include "G4Track.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::ActionInitialization(AnalysisManager* analysis)
-: G4VUserActionInitialization(),
-  fAnalysisManager(analysis)
-{}
+StackingAction::StackingAction()
+:G4UserStackingAction()
+{ }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-ActionInitialization::~ActionInitialization()
-{}
+StackingAction::~StackingAction()
+{ }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void ActionInitialization::BuildForMaster() const
+G4ClassificationOfNewTrack
+StackingAction::ClassifyNewTrack(const G4Track* aTrack)
 {
-  RunAction* runAction = new RunAction(fAnalysisManager);
-  SetUserAction(runAction);
+  //keep primary particle
+  if (aTrack->GetParentID() == 0) return fUrgent;
+
+  //kill all secondaries  
+  return fKill;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void ActionInitialization::Build() const
-{
-  SetUserAction(new PrimaryGeneratorAction());
-
-  RunAction* runAction = new RunAction(fAnalysisManager);
-  SetUserAction(runAction);
-  
-  EventAction* eventAction = new EventAction(fAnalysisManager);
-  SetUserAction(eventAction);
-
-  TrackingAction* trackingAction = new TrackingAction();
-  SetUserAction(trackingAction);
-  
-  SetUserAction(new SteppingAction(eventAction, trackingAction));
- 
-  StackingAction* stackingAction = new StackingAction();
-         SetUserAction(stackingAction);
-
-}  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
