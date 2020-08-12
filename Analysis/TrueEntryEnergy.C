@@ -7,7 +7,7 @@
 
   string sourceEnergy;
   cout << "What energy do you want to look at? \
-(Choose from 100GeV, 500GeV and 1TeV)" 
+(Choose from 100, 300, 500, 700 GeV and 1TeV)" 
        << endl; 
   cin >> sourceEnergy;
 
@@ -22,7 +22,7 @@
 
   TProfile * hprof = new TProfile("hprof",
                                   "Energy of Muon When Entering Water",
-                                   1002,-1, 1001,0,1000000,"s");
+                                   1002,-1, 1001,0,1000000);
 
   for (int x=0; x<fileNumber; ++x)
   {

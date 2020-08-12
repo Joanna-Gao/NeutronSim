@@ -49,7 +49,7 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
-# Add the executable, and link it to the Geant4 libraries
+# Add the executable, and link it to the Geant4 and ROOT libraries
 #
 add_executable(NeutronSim NeutronSim.cc ${sources} ${headers})
 target_link_libraries(NeutronSim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
